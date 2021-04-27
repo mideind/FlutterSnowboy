@@ -1,8 +1,14 @@
 name: flutter_snowboy
-description: A new Flutter package project.
+description: A Flutter plugin for Snowboy hotword detection
 version: 0.0.1
-author:
-homepage:
+author: Miðeind ehf.
+homepage: https://mideind.is
+
+plugin:
+    platforms:
+      android:
+        package: is.mideind.flutter_snowboy
+        pluginClass: Snowboy
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
