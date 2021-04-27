@@ -1,7 +1,18 @@
 library flutter_snowboy;
 
 /// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
+class FlutterSnowboy {
+  void prepare(String modelPath, [double sensitivity, double audioGain, bool applyFrontend]) {
+    // pass
+  }
+
+  void start(Function hotwordHandler) {
+    // pass
+  }
+
+  void stop() {
+    // pass
+  }
+
+  void purge() {}
 }
