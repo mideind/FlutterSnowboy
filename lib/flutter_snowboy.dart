@@ -35,7 +35,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 class FlutterSnowboy {
-  static const MethodChannel _channel = const MethodChannel('plugin_codelab');
+  static const MethodChannel _channel = const MethodChannel('plugin_snowboy');
 
   static Future<bool> prepare(String modelPath,
       [double sensitivity, double audioGain, bool applyFrontend]) async {
@@ -67,7 +67,6 @@ class FlutterSnowboy {
       await _channel.invokeMethod('stopSnowboy');
     } on PlatformException catch (e) {
       print("Error invoking Snowboy 'stop' method: " + e.toString());
-      return false;
     }
   }
 
@@ -77,7 +76,6 @@ class FlutterSnowboy {
       await _channel.invokeMethod('purgeSnowboy');
     } on PlatformException catch (e) {
       print("Error invoking Snowboy 'purge' method: " + e.toString());
-      return false;
     }
   }
 }

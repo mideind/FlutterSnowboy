@@ -17,10 +17,23 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
   /// when the Flutter Engine is detached from the Activity
   private MethodChannel channel;
 
+  public FlutterSnowboyPlugin() {
+
+  }
+
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "flutter_snowboy");
+    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "plugin_snowboy");
     channel.setMethodCallHandler(this);
+    System.out.println("Attached to Flutter engine");
+
+  }
+
+  @Override
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    channel.setMethodCallHandler(null);
+    System.out.println("Detached from Flutter engine");
+
   }
 
   @Override
@@ -30,16 +43,12 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
     } else if (call.method.equals("startSnowboy")) {
       result.success(true);
     } else if (call.method.equals("stopSnowboy")) {
-      result.success();
+      result.success(null);
     } else if (call.method.equals("purgeSnowboy")) {
-      result.success();
+      result.success(null);
     } else {
       result.notImplemented();
     }
   }
 
-  @Override
-  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    channel.setMethodCallHandler(null);
-  }
 }

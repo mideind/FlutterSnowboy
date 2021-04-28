@@ -4,12 +4,6 @@ version: 0.0.1
 author: Miðeind ehf.
 homepage: https://mideind.is
 
-plugin:
-    platforms:
-      android:
-        package: is.mideind.flutter_snowboy
-        pluginClass: Snowboy
-
 environment:
   sdk: ">=2.7.0 <3.0.0"
   flutter: ">=1.17.0"
@@ -23,6 +17,11 @@ dev_dependencies:
     sdk: flutter
 
 flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.example.flutter_snowboy
+        pluginClass: FlutterSnowboyPlugin
   # To add assets to your package, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
