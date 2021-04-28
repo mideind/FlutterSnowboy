@@ -30,20 +30,54 @@
 
 library flutter_snowboy;
 
+import 'dart:async';
+
+import 'package:flutter/services.dart';
+
 class FlutterSnowboy {
-  void prepare(String modelPath, [double sensitivity, double audioGain, bool applyFrontend]) {
+  static const MethodChannel _channel = const MethodChannel('plugin_codelab');
+
+  static Future<bool> prepare(String modelPath,
+      [double sensitivity, double audioGain, bool applyFrontend]) async {
     // Initialize Snowboy, load model
+    try {
+      final bool success = await _channel
+          .invokeMethod('prepareSnowboy', [modelPath, sensitivity, audioGain, applyFrontend]);
+      return success;
+    } on PlatformException catch (e) {
+      print("Error invoking Snowboy 'prepare' method: " + e.toString());
+      return false;
+    }
   }
 
-  void start(Function hotwordHandler) {
+  static Future<bool> start(Function hotwordHandler) async {
     // Activate hotword detection
+    try {
+      final bool success = await _channel.invokeMethod('startSnowboy');
+      return success;
+    } on PlatformException catch (e) {
+      print("Error invoking Snowboy 'start' method: " + e.toString());
+      return false;
+    }
   }
 
-  void stop() {
+  static Future<void> stop() async {
     // Suspend hotword detection
+    try {
+      await _channel.invokeMethod('stopSnowboy');
+    } on PlatformException catch (e) {
+      print("Error invoking Snowboy 'stop' method: " + e.toString());
+      return false;
+    }
   }
 
-  void purge() {
+  static Future<void> purge() async {
     // Dispose of all resources
+    try {
+      await _channel.invokeMethod('purgeSnowboy');
+    } on PlatformException catch (e) {
+      print("Error invoking Snowboy 'purge' method: " + e.toString());
+      return false;
+    }
   }
 }

@@ -25,8 +25,14 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    if (call.method.equals("getPlatformVersion")) {
-      result.success("Android " + android.os.Build.VERSION.RELEASE);
+    if (call.method.equals("prepareSnowboy")) {
+      result.success(true);
+    } else if (call.method.equals("startSnowboy")) {
+      result.success(true);
+    } else if (call.method.equals("stopSnowboy")) {
+      result.success();
+    } else if (call.method.equals("purgeSnowboy")) {
+      result.success();
     } else {
       result.notImplemented();
     }

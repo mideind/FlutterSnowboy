@@ -31,8 +31,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
-import 'package:flutter_snowboy/flutter_snowboy.dart';
+// import 'package:flutter/services.dart';
+// import 'package:flutter_snowboy/flutter_snowboy.dart';
 
 void main() {
   runApp(MyApp());
@@ -67,9 +67,9 @@ class _MyAppState extends State<MyApp> {
     // setState to update our non-existent appearance.
     if (!mounted) return;
 
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+    // setState(() {
+    //   _platformVersion = platformVersion;
+    // });
   }
 
   @override
