@@ -1,11 +1,17 @@
 package com.example.flutter_snowboy;
 
+import java.util.*;
+import java.io.File;
 import androidx.annotation.NonNull;
 
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.content.Context;
+import android.util.Log;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -17,9 +23,8 @@ import ai.kitt.snowboy.audio.PlaybackThread;
 import ai.kitt.snowboy.Constants;
 
 import ai.kitt.snowboy.audio.AudioDataSaver;
-
 import ai.kitt.snowboy.SnowboyDetect;
-
+import ai.kitt.snowboy.AppResCopy;
 
 import android.media.AudioManager;
 
@@ -27,7 +32,8 @@ import android.media.AudioManager;
 /** FlutterSnowboyPlugin */
 public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
 
-  static { System.loadLibrary("snowboy-detect-android"); }
+  // static { System.loadLibrary("snowboy-detect-android"); }
+
   /// The MethodChannel that will the communication between Flutter and native Android
   ///
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -35,6 +41,7 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
   private MethodChannel channel;
   private RecordingThread recordingThread;
   private SnowboyDetect detector;
+  private Context context;
 
   public FlutterSnowboyPlugin() {
 
@@ -70,7 +77,8 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
     private String commonRes = strEnvWorkSpace+ACTIVE_RES;
 
   public void prepareSnowboy() {
-    detector = new SnowboyDetect(commonRes, activeModel);
+    System.loadLibrary("snowboy-detect-android");
+    detector = new SnowboyDetect("snowboy/common.res", "snowboy/alexa.umdl");
     // recordingThread = new RecordingThread(handle, new AudioDataSaver());
   }
 
@@ -78,22 +86,24 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "plugin_snowboy");
     channel.setMethodCallHandler(this);
-    System.out.println("Attached to Flutter engine");
+    context = flutterPluginBinding.getApplicationContext();
+    System.err.println("Attached to Flutter engine");
+    AppResCopy.copyFilesFromAssets(context, "snowboy", strEnvWorkSpace+"/", true);
 
   }
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
-    System.out.println("Detached from Flutter engine");
+    System.err.println("Detached from Flutter engine");
 
   }
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     if (call.method.equals("prepareSnowboy")) {
-      prepareSnowboy();
-      result.success(true);
+      //prepareSnowboy();
+      result.success("");
     } else if (call.method.equals("startSnowboy")) {
       recordingThread.startRecording();
       result.success(true);
@@ -103,6 +113,36 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
     } else if (call.method.equals("purgeSnowboy")) {
       recordingThread = null;
       result.success(null);
+    } else if (call.method.equals("files")) {
+      Log.e("Files", "Context: " + context.toString());
+      //String path = Environment.getExternalStorageDirectory().toString();
+      String path = context.getFilesDir().getAbsolutePath() + "/snowboy";
+      AppResCopy.copyFilesFromAssets(context, Constants.ASSETS_RES_DIR, path, true);
+      
+      ArrayList fs = new ArrayList();
+      fs.add(path);
+      fs.add(context.toString());
+
+      // String path = Environment.getExternalStorageDirectory().toString();
+      Log.e("Files", "Path: " + path);
+      File directory = new File(path);
+      fs.add(directory.toString());
+      File[] files = directory.listFiles();
+            fs.add(files.toString());
+
+      if (files != null) {
+      Log.e("Files", "Size: "+ files.length);
+      // for (int i = 0; i < files.length; i++)
+      // {
+      //     Log.e("Files", "FileName:" + files[i].getName());
+      // }
+      }
+
+      System.loadLibrary("snowboy-detect-android");
+      detector = new SnowboyDetect("snowboy/common.res", "snowboy/alexa.umdl");
+
+      result.success(fs);
+
     } else {
       result.notImplemented();
     }

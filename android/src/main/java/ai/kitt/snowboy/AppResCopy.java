@@ -10,9 +10,10 @@ public class AppResCopy {
     private final static String TAG = AppResCopy.class.getSimpleName();
     private static String envWorkSpace = Constants.DEFAULT_WORK_SPACE;
 
-    private static void copyFilesFromAssets(Context context, String assetsSrcDir, String sdcardDstDir, boolean override) {
+    public static void copyFilesFromAssets(Context context, String assetsSrcDir, String sdcardDstDir, boolean override) {
         try {
             String fileNames[] = context.getAssets().list(assetsSrcDir);
+            Log.e(TAG, "fileNames.toString()");
             if (fileNames.length > 0) {
                 Log.i(TAG, assetsSrcDir +" directory has "+fileNames.length+" files.\n");
                 File dir = new File(sdcardDstDir);

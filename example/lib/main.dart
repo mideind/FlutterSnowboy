@@ -45,7 +45,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
-  bool _success;
+  List _success;
 
   @override
   void initState() {
@@ -68,10 +68,13 @@ class _MyAppState extends State<MyApp> {
     // setState to update our non-existent appearance.
     if (!mounted) return;
 
-    bool s = await FlutterSnowboy.prepare("");
+    //String s = await FlutterSnowboy.prepare("");
+
+    List f = await FlutterSnowboy.files();
+    print(f);
 
     setState(() {
-      _success = s;
+      _success = f;
       // _platformVersion = platformVersion;
     });
   }

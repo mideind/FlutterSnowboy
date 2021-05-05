@@ -37,16 +37,16 @@ import 'package:flutter/services.dart';
 class FlutterSnowboy {
   static const MethodChannel _channel = const MethodChannel('plugin_snowboy');
 
-  static Future<bool> prepare(String modelPath,
+  static Future<String> prepare(String modelPath,
       [double sensitivity, double audioGain, bool applyFrontend]) async {
     // Initialize Snowboy, load model
     try {
-      final bool success = await _channel
+      final String success = await _channel
           .invokeMethod('prepareSnowboy', [modelPath, sensitivity, audioGain, applyFrontend]);
       return success;
     } on PlatformException catch (e) {
       print("Error invoking Snowboy 'prepare' method: " + e.toString());
-      return false;
+      return "";
     }
   }
 
@@ -77,5 +77,16 @@ class FlutterSnowboy {
     } on PlatformException catch (e) {
       print("Error invoking Snowboy 'purge' method: " + e.toString());
     }
+  }
+
+  static Future<List> files() async {
+    // Debug
+    try {
+      final List f = await _channel.invokeMethod('files');
+      return f;
+    } on PlatformException catch (e) {
+      print("Error invoking Snowboy 'files' method: " + e.toString());
+    }
+    return null;
   }
 }
