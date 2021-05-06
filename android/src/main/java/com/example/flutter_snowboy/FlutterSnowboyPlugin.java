@@ -4,6 +4,7 @@ import java.util.*;
 import java.io.File;
 
 import androidx.annotation.NonNull;
+
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -19,35 +20,29 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 import ai.kitt.snowboy.audio.RecordingThread;
-import ai.kitt.snowboy.audio.PlaybackThread;
-import ai.kitt.snowboy.audio.AudioDataSaver;
 import ai.kitt.snowboy.Constants;
 import ai.kitt.snowboy.SnowboyDetect;
 import ai.kitt.snowboy.AppResCopy;
 
 
-/** FlutterSnowboyPlugin */
 public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
 
-  static { System.loadLibrary("snowboy-detect-android"); }
+    /// The MethodChannel that will the communication between Flutter and native Android
+    ///
+    /// This local reference serves to register the plugin with the Flutter Engine and unregister it
+    /// when the Flutter Engine is detached from the Activity
+    private MethodChannel channel;
+    private RecordingThread recordingThread;
+    private Context context;
 
-  /// The MethodChannel that will the communication between Flutter and native Android
-  ///
-  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-  /// when the Flutter Engine is detached from the Activity
-  private MethodChannel channel;
-  private RecordingThread recordingThread;
-  private Context context;
-  private String rsrcPath;
+    public FlutterSnowboyPlugin() {
 
-  public FlutterSnowboyPlugin() {
+    }
 
-  }
-
-  public Handler handle = new Handler() {
+    public Handler handle = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-          System.err.println("Handler invoked!");
+            System.err.println("Handler invoked!");
             // MsgEnum message = MsgEnum.getMsgEnum(msg.what);
             // switch(message) {
             //     case MSG_ACTIVE:
@@ -67,52 +62,51 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
         }
     };
 
-  public boolean prepareSnowboy() {
-    // Copy assets required by Snowboy to filesystem
-    rsrcPath = context.getFilesDir().getAbsolutePath() + "/snowboy";
-    AppResCopy.copyFilesFromAssets(context, Constants.ASSETS_RES_DIR, rsrcPath, true);
-    recordingThread = new RecordingThread(handle, new AudioDataSaver(), rsrcPath);
+    public boolean prepareSnowboy() {
+        String rsrcPath = context.getFilesDir().getAbsolutePath() + "/" + Constants.ASSETS_DIRNAME;
+        String commonPath = rsrcPath + "/" + Constants.COMMON_RES_FILENAME;
+        String modelPath = rsrcPath + "/" + Constants.DEFAULT_MODEL_FILENAME;
 
-    recordingThread.startRecording();
-    // Initialize new detector
-    // detector = new SnowboyDetect(path + "/common.res", path + "/alexa.umdl");
-    // detector.SetSensitivity("0.6");
-    // detector.SetAudioGain(1);
-    // detector.ApplyFrontend(true);
+        // Copy assets required by Snowboy to filesystem
+        AppResCopy.copyFilesFromAssets(context, Constants.ASSETS_DIRNAME, rsrcPath, true);
 
-    return true;
-  }
+        // Create detection thread
+        recordingThread = new RecordingThread(handle, commonPath, modelPath, "0.6", 1, true);
+        recordingThread.startRecording();
 
-  @Override
-  public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "plugin_snowboy");
-    channel.setMethodCallHandler(this);
-    context = flutterPluginBinding.getApplicationContext();
-    System.err.println("Attached to Flutter engine");
-  }
-
-  @Override
-  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    channel.setMethodCallHandler(null);
-    System.err.println("Detached from Flutter engine");
-  }
-
-  @Override
-  public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    if (call.method.equals("prepareSnowboy")) {
-      result.success(prepareSnowboy());
-    } else if (call.method.equals("startSnowboy")) {
-      recordingThread.startRecording();
-      result.success(true);
-    } else if (call.method.equals("stopSnowboy")) {
-      recordingThread.stopRecording();
-      result.success(null);
-    } else if (call.method.equals("purgeSnowboy")) {
-      recordingThread = null;
-      result.success(null);
-    } else {
-      result.notImplemented();
+        return true;
     }
-  }
+
+    @Override
+    public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
+        channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "plugin_snowboy");
+        channel.setMethodCallHandler(this);
+        context = flutterPluginBinding.getApplicationContext();
+        System.err.println("Attached to Flutter engine");
+    }
+
+    @Override
+    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+        channel.setMethodCallHandler(null);
+        System.err.println("Detached from Flutter engine");
+    }
+
+    @Override
+    public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
+        if (call.method.equals("prepareSnowboy")) {
+            result.success(prepareSnowboy());
+        } else if (call.method.equals("startSnowboy")) {
+            recordingThread.startRecording();
+            result.success(true);
+        } else if (call.method.equals("stopSnowboy")) {
+            recordingThread.stopRecording();
+            result.success(null);
+        } else if (call.method.equals("purgeSnowboy")) {
+            recordingThread = null;
+            result.success(null);
+        } else {
+            result.notImplemented();
+        }
+    }
 
 }

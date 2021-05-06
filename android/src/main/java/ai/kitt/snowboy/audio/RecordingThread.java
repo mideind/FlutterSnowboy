@@ -6,10 +6,10 @@ import java.nio.ByteOrder;
 
 import ai.kitt.snowboy.Constants;
 import ai.kitt.snowboy.MsgEnum;
+
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
-import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -17,42 +17,26 @@ import android.util.Log;
 import ai.kitt.snowboy.SnowboyDetect;
 
 public class RecordingThread {
-    static { System.loadLibrary("snowboy-detect-android"); }
-
-    private static final String TAG = RecordingThread.class.getSimpleName();
-
-    private static final String ACTIVE_RES = Constants.ACTIVE_RES;
-    private static final String ACTIVE_UMDL = Constants.ACTIVE_UMDL;
-    
-    private boolean shouldContinue;
-    private AudioDataReceivedListener listener = null;
-    private Handler handler = null;
-    private Thread thread;
-    
-    private static String strEnvWorkSpace = Constants.DEFAULT_WORK_SPACE;
-    private String activeModel = strEnvWorkSpace+ACTIVE_UMDL;    
-    private String commonRes = strEnvWorkSpace+ACTIVE_RES;   
-    
-    private SnowboyDetect detector;
-    private MediaPlayer player = new MediaPlayer();
-
-    public RecordingThread(Handler handler, AudioDataReceivedListener listener, String rsrcPath) {
-        this.handler = handler;
-        this.listener = null;
-        this.detector = new SnowboyDetect(rsrcPath + "/common.res", rsrcPath + "/alexa.umdl");
-
-        detector.SetSensitivity("0.6");
-        detector.SetAudioGain(1);
-        detector.ApplyFrontend(true);
-        // try {
-        //     // player.setDataSource(rsrcPath+"ding.wav");
-        //     // player.prepare();
-        // } catch (IOException e) {
-        //     //Log.e(TAG, "Playing ding sound error", e);
-        // }
+    static {
+        System.loadLibrary("snowboy-detect-android");
     }
 
-    private void sendMessage(MsgEnum what, Object obj){
+    private static final String TAG = RecordingThread.class.getSimpleName();
+    private final Handler handler;
+    private final SnowboyDetect detector;
+    private Thread thread;
+    private boolean shouldContinue;
+
+    public RecordingThread(Handler handler, String commonPath, String modelPath,
+                           String sensitivity, float audioGain, boolean applyFrontend) {
+        this.handler = handler;
+        this.detector = new SnowboyDetect(commonPath, modelPath);
+        this.detector.SetSensitivity(sensitivity);
+        this.detector.SetAudioGain(audioGain);
+        this.detector.ApplyFrontend(applyFrontend);
+    }
+
+    private void sendMessage(MsgEnum what, Object obj) {
         if (null != handler) {
             Message msg = handler.obtainMessage(what.ordinal(), obj);
             handler.sendMessage(msg);
@@ -60,9 +44,9 @@ public class RecordingThread {
     }
 
     public void startRecording() {
-        if (thread != null)
+        if (thread != null) {
             return;
-
+        }
         shouldContinue = true;
         thread = new Thread(new Runnable() {
             @Override
@@ -82,31 +66,29 @@ public class RecordingThread {
     }
 
     private void record() {
-        Log.v(TAG, "Start");
+        Log.v(TAG, "Start recording");
         android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO);
 
         // Buffer size in bytes: for 0.1 second of audio
-        int bufferSize = (int)(Constants.SAMPLE_RATE * 0.1 * 2);
+        int bufferSize = (int) (Constants.SAMPLE_RATE * 0.1 * 2);
         if (bufferSize == AudioRecord.ERROR || bufferSize == AudioRecord.ERROR_BAD_VALUE) {
             bufferSize = Constants.SAMPLE_RATE * 2;
         }
 
         byte[] audioBuffer = new byte[bufferSize];
         AudioRecord record = new AudioRecord(
-            MediaRecorder.AudioSource.DEFAULT,
-            Constants.SAMPLE_RATE,
-            AudioFormat.CHANNEL_IN_MONO,
-            AudioFormat.ENCODING_PCM_16BIT,
-            bufferSize);
+                MediaRecorder.AudioSource.DEFAULT,
+                Constants.SAMPLE_RATE,
+                AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.ENCODING_PCM_16BIT,
+                bufferSize);
 
         if (record.getState() != AudioRecord.STATE_INITIALIZED) {
             Log.e(TAG, "Audio Record can't initialize!");
             return;
         }
         record.startRecording();
-        if (null != listener) {
-            listener.start();
-        }
+
         Log.v(TAG, "Start recording");
 
         long shortsRead = 0;
@@ -114,10 +96,6 @@ public class RecordingThread {
         while (shouldContinue) {
             record.read(audioBuffer, 0, audioBuffer.length);
 
-            if (null != listener) {
-                listener.onAudioDataReceived(audioBuffer, audioBuffer.length);
-            }
-            
             // Converts to short array.
             short[] audioData = new short[audioBuffer.length / 2];
             ByteBuffer.wrap(audioBuffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(audioData);
@@ -138,16 +116,12 @@ public class RecordingThread {
             } else if (result > 0) {
                 sendMessage(MsgEnum.MSG_ACTIVE, null);
                 Log.i("Snowboy: ", "Hotword " + Integer.toString(result) + " detected!");
-                player.start();
             }
         }
 
         record.stop();
         record.release();
 
-        if (null != listener) {
-            listener.stop();
-        }
         Log.v(TAG, String.format("Recording stopped. Samples read: %d", shortsRead));
     }
 }
