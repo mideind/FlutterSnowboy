@@ -33,22 +33,23 @@ public class RecordingThread {
     private String activeModel = strEnvWorkSpace+ACTIVE_UMDL;    
     private String commonRes = strEnvWorkSpace+ACTIVE_RES;   
     
-    private SnowboyDetect detector = new SnowboyDetect(commonRes, activeModel);
+    private SnowboyDetect detector;
     private MediaPlayer player = new MediaPlayer();
 
-    public RecordingThread(Handler handler, AudioDataReceivedListener listener) {
+    public RecordingThread(Handler handler, AudioDataReceivedListener listener, String rsrcPath) {
         this.handler = handler;
-        this.listener = listener;
+        this.listener = null;
+        this.detector = new SnowboyDetect(rsrcPath + "/common.res", rsrcPath + "/alexa.umdl");
 
         detector.SetSensitivity("0.6");
         detector.SetAudioGain(1);
         detector.ApplyFrontend(true);
-        try {
-            player.setDataSource(strEnvWorkSpace+"ding.wav");
-            player.prepare();
-        } catch (IOException e) {
-            Log.e(TAG, "Playing ding sound error", e);
-        }
+        // try {
+        //     // player.setDataSource(rsrcPath+"ding.wav");
+        //     // player.prepare();
+        // } catch (IOException e) {
+        //     //Log.e(TAG, "Playing ding sound error", e);
+        // }
     }
 
     private void sendMessage(MsgEnum what, Object obj){

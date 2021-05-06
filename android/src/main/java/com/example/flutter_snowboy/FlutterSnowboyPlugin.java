@@ -29,7 +29,7 @@ import ai.kitt.snowboy.AppResCopy;
 /** FlutterSnowboyPlugin */
 public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
 
-  // static { System.loadLibrary("snowboy-detect-android"); }
+  static { System.loadLibrary("snowboy-detect-android"); }
 
   /// The MethodChannel that will the communication between Flutter and native Android
   ///
@@ -37,8 +37,8 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
   /// when the Flutter Engine is detached from the Activity
   private MethodChannel channel;
   private RecordingThread recordingThread;
-  private SnowboyDetect detector;
   private Context context;
+  private String rsrcPath;
 
   public FlutterSnowboyPlugin() {
 
@@ -47,6 +47,7 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
   public Handler handle = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+          System.err.println("Handler invoked!");
             // MsgEnum message = MsgEnum.getMsgEnum(msg.what);
             // switch(message) {
             //     case MSG_ACTIVE:
@@ -66,17 +67,20 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
         }
     };
 
-  private static final String ACTIVE_RES = Constants.ACTIVE_RES;
-  private static final String ACTIVE_UMDL = Constants.ACTIVE_UMDL;
+  public boolean prepareSnowboy() {
+    // Copy assets required by Snowboy to filesystem
+    rsrcPath = context.getFilesDir().getAbsolutePath() + "/snowboy";
+    AppResCopy.copyFilesFromAssets(context, Constants.ASSETS_RES_DIR, rsrcPath, true);
+    recordingThread = new RecordingThread(handle, new AudioDataSaver(), rsrcPath);
 
-    private static String strEnvWorkSpace = Constants.DEFAULT_WORK_SPACE;
-    private String activeModel = strEnvWorkSpace+ACTIVE_UMDL;
-    private String commonRes = strEnvWorkSpace+ACTIVE_RES;
+    recordingThread.startRecording();
+    // Initialize new detector
+    // detector = new SnowboyDetect(path + "/common.res", path + "/alexa.umdl");
+    // detector.SetSensitivity("0.6");
+    // detector.SetAudioGain(1);
+    // detector.ApplyFrontend(true);
 
-  public void prepareSnowboy() {
-    System.loadLibrary("snowboy-detect-android");
-    detector = new SnowboyDetect("snowboy/common.res", "snowboy/alexa.umdl");
-    // recordingThread = new RecordingThread(handle, new AudioDataSaver());
+    return true;
   }
 
   @Override
@@ -96,8 +100,7 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     if (call.method.equals("prepareSnowboy")) {
-      //prepareSnowboy();
-      result.success("");
+      result.success(prepareSnowboy());
     } else if (call.method.equals("startSnowboy")) {
       recordingThread.startRecording();
       result.success(true);
@@ -107,17 +110,6 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
     } else if (call.method.equals("purgeSnowboy")) {
       recordingThread = null;
       result.success(null);
-    } else if (call.method.equals("files")) {
-      String path = context.getFilesDir().getAbsolutePath() + "/snowboy";
-      AppResCopy.copyFilesFromAssets(context, Constants.ASSETS_RES_DIR, path, true);
-
-      ArrayList fs = new ArrayList();
-
-      System.loadLibrary("snowboy-detect-android");
-      detector = new SnowboyDetect(path + "/common.res", path + "/alexa.umdl");
-
-      result.success(fs);
-
     } else {
       result.notImplemented();
     }

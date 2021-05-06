@@ -44,7 +44,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  List _success;
 
   @override
   void initState() {
@@ -69,12 +68,9 @@ class _MyAppState extends State<MyApp> {
 
     //String s = await FlutterSnowboy.prepare("");
 
-    List f = await FlutterSnowboy.files();
-    print(f);
+    await FlutterSnowboy.prepare("blabla");
 
     setState(() {
-      _success = f;
-      // _platformVersion = platformVersion;
     });
   }
 
@@ -86,7 +82,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Flutter Snowboy example app'),
         ),
         body: Center(
-          child: Text('Result: $_success\n'),
+          child: Text('Result: Hello\n'),
         ),
       ),
     );
