@@ -37,19 +37,19 @@ import 'package:flutter/services.dart';
 class FlutterSnowboy {
   static const MethodChannel _channel = const MethodChannel('plugin_snowboy');
 
-  static void err(String method, String msg) {
-    print("Error invoking Snowboy '{method}' method: " + msg);
+  static void _err(String method, String msg) {
+    print("Error invoking Snowboy '$method' method: $msg");
   }
 
   static Future<bool> prepare(String modelPath,
       [double sensitivity, double audioGain, bool applyFrontend]) async {
-    // Initialize Snowboy, load model
+    // Initialize Snowboy, load model and other required resources
     try {
       final bool success = await _channel
           .invokeMethod('prepareSnowboy', [modelPath, sensitivity, audioGain, applyFrontend]);
       return success;
     } on PlatformException catch (e) {
-      err("prepare", e.toString());
+      _err("prepare", e.toString());
       return false;
     }
   }
@@ -60,7 +60,7 @@ class FlutterSnowboy {
       final bool success = await _channel.invokeMethod('startSnowboy');
       return success;
     } on PlatformException catch (e) {
-      err("start", e.toString());
+      _err("start", e.toString());
       return false;
     }
   }
@@ -70,7 +70,7 @@ class FlutterSnowboy {
     try {
       await _channel.invokeMethod('stopSnowboy');
     } on PlatformException catch (e) {
-      err("stop", e.toString());
+      _err("stop", e.toString());
     }
   }
 
@@ -79,7 +79,7 @@ class FlutterSnowboy {
     try {
       await _channel.invokeMethod('purgeSnowboy');
     } on PlatformException catch (e) {
-      err("purge", e.toString());
+      _err("purge", e.toString());
     }
   }
 

@@ -5,7 +5,6 @@ import java.io.File;
 
 import androidx.annotation.NonNull;
 
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.content.Context;
@@ -19,19 +18,18 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
-import ai.kitt.snowboy.audio.RecordingThread;
 import ai.kitt.snowboy.Constants;
-import ai.kitt.snowboy.SnowboyDetect;
 import ai.kitt.snowboy.AppResCopy;
+import ai.kitt.snowboy.audio.RecordingThread;
 
 
 public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
 
-    /// The MethodChannel that will the communication between Flutter and native Android
-    ///
-    /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-    /// when the Flutter Engine is detached from the Activity
+    // The MethodChannel that will the communication between Flutter and native Android
+    // This local reference serves to register the plugin with the Flutter Engine and unregister it
+    // when the Flutter Engine is detached from the Activity
     private MethodChannel channel;
+
     private RecordingThread recordingThread;
     private Context context;
 
@@ -62,7 +60,7 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
         }
     };
 
-    public boolean prepareSnowboy() {
+    public void prepareSnowboy(@NonNull MethodCall call, @NonNull Result result) {
         String rsrcPath = context.getFilesDir().getAbsolutePath() + "/" + Constants.ASSETS_DIRNAME;
         String commonPath = rsrcPath + "/" + Constants.COMMON_RES_FILENAME;
         String modelPath = rsrcPath + "/" + Constants.DEFAULT_MODEL_FILENAME;
@@ -71,10 +69,36 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
         AppResCopy.copyFilesFromAssets(context, Constants.ASSETS_DIRNAME, rsrcPath, true);
 
         // Create detection thread
-        recordingThread = new RecordingThread(handle, commonPath, modelPath, "0.6", 1, true);
-        recordingThread.startRecording();
+        try {
+            recordingThread = new RecordingThread(handle, commonPath, modelPath, "0.6", 1, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.success(false);
+        }
 
-        return true;
+        result.success(true);
+    }
+
+    public void startSnowboy(@NonNull MethodCall call, @NonNull Result result) {
+        try {
+            recordingThread.startRecording();
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.success(false);
+        }
+        result.success(true);
+    }
+
+    public void stopSnowboy(@NonNull MethodCall call, @NonNull Result result) {
+        if (recordingThread != null) {
+            recordingThread.stopRecording();
+        }
+        result.success(null);
+    }
+
+    public void purgeSnowboy(@NonNull MethodCall call, @NonNull Result result) {
+        recordingThread = null;
+        result.success(null);
     }
 
     @Override
@@ -82,28 +106,23 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "plugin_snowboy");
         channel.setMethodCallHandler(this);
         context = flutterPluginBinding.getApplicationContext();
-        System.err.println("Attached to Flutter engine");
     }
 
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
         channel.setMethodCallHandler(null);
-        System.err.println("Detached from Flutter engine");
     }
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         if (call.method.equals("prepareSnowboy")) {
-            result.success(prepareSnowboy());
+            prepareSnowboy(call, result);
         } else if (call.method.equals("startSnowboy")) {
-            recordingThread.startRecording();
-            result.success(true);
+            startSnowboy(call, result);
         } else if (call.method.equals("stopSnowboy")) {
-            recordingThread.stopRecording();
-            result.success(null);
+            stopSnowboy(call, result);
         } else if (call.method.equals("purgeSnowboy")) {
-            recordingThread = null;
-            result.success(null);
+            purgeSnowboy(call, result);
         } else {
             result.notImplemented();
         }
