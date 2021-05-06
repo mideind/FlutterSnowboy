@@ -85,15 +85,12 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
     channel.setMethodCallHandler(this);
     context = flutterPluginBinding.getApplicationContext();
     System.err.println("Attached to Flutter engine");
-    AppResCopy.copyFilesFromAssets(context, "snowboy", strEnvWorkSpace+"/", true);
-
   }
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
     System.err.println("Detached from Flutter engine");
-
   }
 
   @Override
@@ -111,10 +108,9 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
       recordingThread = null;
       result.success(null);
     } else if (call.method.equals("files")) {
-      Log.e("Files", "Context: " + context.toString());
       String path = context.getFilesDir().getAbsolutePath() + "/snowboy";
       AppResCopy.copyFilesFromAssets(context, Constants.ASSETS_RES_DIR, path, true);
-      
+
       ArrayList fs = new ArrayList();
 
       System.loadLibrary("snowboy-detect-android");

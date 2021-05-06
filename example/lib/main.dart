@@ -44,7 +44,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
   List _success;
 
   @override
@@ -84,7 +83,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Snowboy example app'),
+          title: const Text('Flutter Snowboy example app'),
         ),
         body: Center(
           child: Text('Result: $_success\n'),
