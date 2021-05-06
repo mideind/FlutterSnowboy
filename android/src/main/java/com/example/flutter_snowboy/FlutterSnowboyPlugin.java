@@ -41,6 +41,19 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public void handleMessage(Message msg) {
             System.err.println("Handler invoked!");
+
+            channel.invokeMethod("hotword", null, new Result() {
+                @Override
+                public void success(Object o) {
+                }
+
+                @Override
+                public void error(String s, String s1, Object o) {}
+
+                @Override
+                public void notImplemented() {}
+            });
+
             // MsgEnum message = MsgEnum.getMsgEnum(msg.what);
             // switch(message) {
             //     case MSG_ACTIVE:

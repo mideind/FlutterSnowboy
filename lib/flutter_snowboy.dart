@@ -35,13 +35,14 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 class FlutterSnowboy {
-  static const MethodChannel _channel = const MethodChannel('plugin_snowboy');
+  MethodChannel _channel = const MethodChannel('plugin_snowboy');
+  Function hotwordHandler;
 
   static void _err(String method, String msg) {
     print("Error invoking Snowboy '$method' method: $msg");
   }
 
-  static Future<bool> prepare(String modelPath,
+  Future<bool> prepare(String modelPath,
       [double sensitivity, double audioGain, bool applyFrontend]) async {
     // Initialize Snowboy, load model and other required resources
     try {
@@ -54,10 +55,11 @@ class FlutterSnowboy {
     }
   }
 
-  static Future<bool> start(Function hotwordHandler) async {
+  Future<bool> start(Function hwHandler) async {
     // Activate hotword detection
     try {
       final bool success = await _channel.invokeMethod('startSnowboy');
+      hotwordHandler = hwHandler;
       return success;
     } on PlatformException catch (e) {
       _err("start", e.toString());
@@ -65,7 +67,7 @@ class FlutterSnowboy {
     }
   }
 
-  static Future<void> stop() async {
+  Future<void> stop() async {
     // Suspend hotword detection
     try {
       await _channel.invokeMethod('stopSnowboy');
@@ -74,12 +76,24 @@ class FlutterSnowboy {
     }
   }
 
-  static Future<void> purge() async {
+  Future<void> purge() async {
     // Dispose of all resources
     try {
       await _channel.invokeMethod('purgeSnowboy');
     } on PlatformException catch (e) {
       _err("purge", e.toString());
+    }
+  }
+
+  Future<dynamic> channelCallbackHandler(MethodCall methodCall) async {
+    switch (methodCall.method) {
+      case 'hotword':
+        if (hotwordHandler != null) {
+          hotwordHandler();
+        }
+        break;
+      default:
+        throw MissingPluginException('notImplemented');
     }
   }
 

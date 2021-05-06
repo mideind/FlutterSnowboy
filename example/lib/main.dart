@@ -44,7 +44,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool result;
+  bool running = false;
+  int numDetected = 0;
+  String status = "Snowboy is not running";
+  FlutterSnowboy detector;
 
   @override
   void initState() {
@@ -59,10 +62,34 @@ class _MyAppState extends State<MyApp> {
     // } on PlatformException {
     // }
 
-    await FlutterSnowboy.prepare("blabla");
-    bool r = await FlutterSnowboy.start(null);
+    detector = FlutterSnowboy();
+
+    await detector.prepare("path/to/model");
+  }
+
+  void hotwordHandler() {
+    print("HOTWORD DETECTED");
     setState(() {
-      result = r;
+      numDetected += 1;
+    });
+  }
+
+  void buttonPressed() {
+    String s;
+    bool r;
+
+    if (running == false) {
+      detector.start(hotwordHandler);
+      s = "Snowboy is running";
+      r = true;
+    } else {
+      detector.stop();
+      s = "Snowboy is not running";
+      r = false;
+    }
+    setState(() {
+      status = s;
+      running = r;
     });
   }
 
@@ -74,7 +101,24 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Flutter Snowboy example app'),
         ),
         body: Center(
-          child: Text('Successfully started: $result\n'),
+          child: Column(children: <Widget>[
+            MaterialButton(
+              minWidth: double.infinity,
+              child: Text('Start detection',
+                  style: TextStyle(
+                    fontSize: 30.0,
+                  )),
+              onPressed: buttonPressed,
+            ),
+            Text(status,
+                style: TextStyle(
+                  fontSize: 20.0,
+                )),
+            Text('Hotword heard $numDetected times',
+                style: TextStyle(
+                  fontSize: 20.0,
+                )),
+          ]),
         ),
       ),
     );
