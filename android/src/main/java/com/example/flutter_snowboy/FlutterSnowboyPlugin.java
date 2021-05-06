@@ -2,16 +2,16 @@ package com.example.flutter_snowboy;
 
 import java.util.*;
 import java.io.File;
-import androidx.annotation.NonNull;
 
+import androidx.annotation.NonNull;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.content.Context;
 import android.util.Log;
+import android.media.AudioManager;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
-import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -20,13 +20,10 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 import ai.kitt.snowboy.audio.RecordingThread;
 import ai.kitt.snowboy.audio.PlaybackThread;
-import ai.kitt.snowboy.Constants;
-
 import ai.kitt.snowboy.audio.AudioDataSaver;
+import ai.kitt.snowboy.Constants;
 import ai.kitt.snowboy.SnowboyDetect;
 import ai.kitt.snowboy.AppResCopy;
-
-import android.media.AudioManager;
 
 
 /** FlutterSnowboyPlugin */
@@ -115,28 +112,10 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
       result.success(null);
     } else if (call.method.equals("files")) {
       Log.e("Files", "Context: " + context.toString());
-      //String path = Environment.getExternalStorageDirectory().toString();
       String path = context.getFilesDir().getAbsolutePath() + "/snowboy";
       AppResCopy.copyFilesFromAssets(context, Constants.ASSETS_RES_DIR, path, true);
       
       ArrayList fs = new ArrayList();
-      fs.add(path);
-      fs.add(context.toString());
-
-      // String path = Environment.getExternalStorageDirectory().toString();
-      Log.e("Files", "Path: " + path);
-      File directory = new File(path);
-      fs.add(directory.toString());
-      File[] files = directory.listFiles();
-            fs.add(files.toString());
-
-      if (files != null) {
-      Log.e("Files", "Size: "+ files.length);
-      // for (int i = 0; i < files.length; i++)
-      // {
-      //     Log.e("Files", "FileName:" + files[i].getName());
-      // }
-      }
 
       System.loadLibrary("snowboy-detect-android");
       detector = new SnowboyDetect("snowboy/common.res", "snowboy/alexa.umdl");
