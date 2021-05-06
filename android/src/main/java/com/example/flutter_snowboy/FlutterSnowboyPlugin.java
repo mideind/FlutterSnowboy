@@ -114,7 +114,7 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
       ArrayList fs = new ArrayList();
 
       System.loadLibrary("snowboy-detect-android");
-      detector = new SnowboyDetect("snowboy/common.res", "snowboy/alexa.umdl");
+      detector = new SnowboyDetect(path + "/common.res", path + "/alexa.umdl");
 
       result.success(fs);
 
