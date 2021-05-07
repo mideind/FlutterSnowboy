@@ -33,6 +33,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_snowboy/flutter_snowboy.dart';
+import 'package:audiofileplayer/audiofileplayer.dart';
 
 void main() {
   runApp(MyApp());
@@ -47,6 +48,7 @@ class _MyAppState extends State<MyApp> {
   bool running = false;
   int numDetected = 0;
   String status = "Snowboy is not running";
+  String buttonTitle  = 'Start detection';
   FlutterSnowboy detector;
 
   @override
@@ -68,7 +70,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void hotwordHandler() {
-    print("HOTWORD DETECTED");
+    Audio.load('assets/ding.wav')..play()..dispose();
     setState(() {
       numDetected += 1;
     });
@@ -76,20 +78,24 @@ class _MyAppState extends State<MyApp> {
 
   void buttonPressed() {
     String s;
+    String t;
     bool r;
 
     if (running == false) {
       detector.start(hotwordHandler);
       s = "Snowboy is running";
+      t = "Stop detection";
       r = true;
     } else {
       detector.stop();
       s = "Snowboy is not running";
+      t = "Start detection";
       r = false;
     }
     setState(() {
       status = s;
       running = r;
+      buttonTitle = t;
     });
   }
 
@@ -104,7 +110,7 @@ class _MyAppState extends State<MyApp> {
           child: Column(children: <Widget>[
             MaterialButton(
               minWidth: double.infinity,
-              child: Text('Start detection',
+              child: Text(buttonTitle,
                   style: TextStyle(
                     fontSize: 30.0,
                   )),

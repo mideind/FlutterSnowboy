@@ -38,6 +38,22 @@ class FlutterSnowboy {
   MethodChannel _channel = const MethodChannel('plugin_snowboy');
   Function hotwordHandler;
 
+  FlutterSnowboy() {
+    _channel.setMethodCallHandler(channelCallbackHandler);
+  }
+
+  Future<dynamic> channelCallbackHandler(MethodCall methodCall) async {
+    switch (methodCall.method) {
+      case 'hotword':
+        if (hotwordHandler != null) {
+          hotwordHandler();
+        }
+        break;
+      default:
+        throw MissingPluginException('notImplemented');
+    }
+  }
+
   static void _err(String method, String msg) {
     print("Error invoking Snowboy '$method' method: $msg");
   }
@@ -82,18 +98,6 @@ class FlutterSnowboy {
       await _channel.invokeMethod('purgeSnowboy');
     } on PlatformException catch (e) {
       _err("purge", e.toString());
-    }
-  }
-
-  Future<dynamic> channelCallbackHandler(MethodCall methodCall) async {
-    switch (methodCall.method) {
-      case 'hotword':
-        if (hotwordHandler != null) {
-          hotwordHandler();
-        }
-        break;
-      default:
-        throw MissingPluginException('notImplemented');
     }
   }
 
