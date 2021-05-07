@@ -1,8 +1,8 @@
 name: flutter_snowboy
 description: A Flutter plugin for Snowboy hotword detection
 version: 0.0.1
-author: Miðeind ehf.
-homepage: https://mideind.is
+author: Sveinbjorn Thordarson (Miðeind ehf.)
+homepage: https://github.com/mideind/flutter_snowboy
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -22,11 +22,3 @@ flutter:
       android:
         package: com.example.flutter_snowboy
         pluginClass: FlutterSnowboyPlugin
-  # To add assets to your package, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
-  #
-  # For details regarding assets in packages, see
-  # https://flutter.dev/assets-and-images/#from-packages
-  #
