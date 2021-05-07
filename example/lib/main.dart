@@ -25,15 +25,15 @@ import 'package:flutter_snowboy/flutter_snowboy.dart';
 import 'package:audiofileplayer/audiofileplayer.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(SnowboyExampleApp());
 }
 
-class MyApp extends StatefulWidget {
+class SnowboyExampleApp extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _SnowboyExampleAppState createState() => _SnowboyExampleAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
   bool running = false;
   int numDetected = 0;
   String status = "Snowboy is not running";
@@ -56,15 +56,17 @@ class _MyAppState extends State<MyApp> {
   }
 
   void hotwordHandler() {
+    // Play sound
     Audio.load('assets/ding.wav')
       ..play()
       ..dispose();
+    // Increment counter
     setState(() {
       numDetected += 1;
     });
   }
 
-  void buttonPressed() {
+  void toggleHotwordDetection() {
     String s;
     String t;
     bool r;
@@ -102,7 +104,7 @@ class _MyAppState extends State<MyApp> {
                   style: TextStyle(
                     fontSize: 30.0,
                   )),
-              onPressed: buttonPressed,
+              onPressed: toggleHotwordDetection,
             ),
             Text(status,
                 style: TextStyle(

@@ -95,11 +95,10 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
         String commonPath = rsrcPath + "/" + Constants.COMMON_RES_FILENAME;
         String modelPath = rsrcPath + "/" + Constants.DEFAULT_MODEL_FILENAME;
 
-        // Copy assets required by Snowboy to filesystem
-        AppResCopy.copyFilesFromAssets(context, Constants.ASSETS_DIRNAME, rsrcPath, true);
-
-        // Create detection thread
         try {
+            // Copy assets required by Snowboy to filesystem
+            AppResCopy.copyFilesFromAssets(context, Constants.ASSETS_DIRNAME, rsrcPath, true);
+            // Create detection thread
             recordingThread = new RecordingThread(handle, commonPath, modelPath, "0.5", 1.0, false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,7 +110,9 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
 
     public void startSnowboy(@NonNull MethodCall call, @NonNull Result result) {
         try {
-            recordingThread.startRecording();
+            if (recordingThread != null) {
+                recordingThread.startRecording();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             result.success(false);
@@ -120,8 +121,12 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     public void stopSnowboy(@NonNull MethodCall call, @NonNull Result result) {
-        if (recordingThread != null) {
-            recordingThread.stopRecording();
+        try {
+            if (recordingThread != null) {
+                recordingThread.stopRecording();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         result.success(null);
     }

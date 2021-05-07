@@ -1,3 +1,5 @@
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 # Flutter Snowboy package
 
 *This plugin is a work in progress. Things may not work.*
@@ -19,6 +21,10 @@ and follow the instructions.
 ### Initialize
 
 ```dart
+import 'package:flutter_snowboy/flutter_snowboy.dart';
+
+...
+
 // Instantiate
 var detector = Snowboy();
 

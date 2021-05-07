@@ -43,14 +43,14 @@ class Snowboy {
     }
   }
 
-  static void _err(String method, String msg) {
-    print("Error invoking Snowboy '$method' method: $msg");
+  static void _err(String methodName, String msg) {
+    print("Error invoking Snowboy '$methodName' method: $msg");
   }
 
   // Instantiate Snowboy in the native plugin code, load provided
-  // model and other resources w. configuration. If no model path
-  // is provided, it defaults to loading a model that recognizes
-  // the hotword "Alexa".
+  // model and other resources, w. configuration. If no model path
+  // is provided, defaults to loading a model that recognizes the
+  // hotword "Alexa".
   Future<bool> prepare(
       {String modelPath = "",
       double sensitivity = 0.5,
