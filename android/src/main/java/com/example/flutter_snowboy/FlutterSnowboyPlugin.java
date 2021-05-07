@@ -100,7 +100,7 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
 
         // Create detection thread
         try {
-            recordingThread = new RecordingThread(handle, commonPath, modelPath, "0.6", 1, true);
+            recordingThread = new RecordingThread(handle, commonPath, modelPath, "0.5", 1.0, false);
         } catch (Exception e) {
             e.printStackTrace();
             result.success(false);

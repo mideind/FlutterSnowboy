@@ -22,7 +22,10 @@ var detector = Snowboy();
 
 // Load model and other resources.
 // This is a moderately expensive operation.
-var success = detector.prepare("path/to/model.pmdl");
+var success = detector.prepare(modelPath="/absolute/path/to/model.pmdl");
+
+// If you just want to load the default "Alexa" model:
+var success = detector.prepare();
 ```
 
 ### Start
