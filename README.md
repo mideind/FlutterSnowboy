@@ -1,5 +1,7 @@
 # Flutter Snowboy package
 
+*This plugin is a work in progress. Things may not work.*
+
 This repository contains the source code to the Flutter Snowboy package.
 [Snowboy](https://github.com/seasalt-ai/snowboy) is a cross-platform
 DNN-based hotword detection toolkit.
@@ -21,7 +23,7 @@ and follow the instructions.
 var detector = Snowboy();
 
 // Load model and other resources.
-// This is a moderately expensive operation.
+// This is a moderately expensive operation since it involves file I/O.
 var success = detector.prepare(modelPath="/absolute/path/to/model.pmdl");
 
 // If you just want to load the default "Alexa" model:
