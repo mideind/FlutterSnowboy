@@ -1,32 +1,21 @@
 /*
-  Copyright (c) 2021 Miðeind ehf.
-  All rights reserved.
+ * Copyright (C) 2021 Miðeind ehf.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 
-  Redistribution and use in source and binary forms, with or without modification,
-  are permitted provided that the following conditions are met:
-
-  1. Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
-
-  2. Redistributions in binary form must reproduce the above copyright notice, this
-  list of conditions and the following disclaimer in the documentation and/or other
-  materials provided with the distribution.
-
-  3. Neither the name of the copyright holder nor the names of its contributors may
-  be used to endorse or promote products derived from this software without specific
-  prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
-  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-  POSSIBILITY OF SUCH DAMAGE.
-*/
+// Example application demonstrating use of the Flutter Snowboy plugin.
 
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -48,8 +37,8 @@ class _MyAppState extends State<MyApp> {
   bool running = false;
   int numDetected = 0;
   String status = "Snowboy is not running";
-  String buttonTitle  = 'Start detection';
-  FlutterSnowboy detector;
+  String buttonTitle = 'Start detection';
+  Snowboy detector;
 
   @override
   void initState() {
@@ -60,17 +49,16 @@ class _MyAppState extends State<MyApp> {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     // Platform messages may fail, so we use a try/catch PlatformException.
-    // try {
-    // } on PlatformException {
-    // }
-
-    detector = FlutterSnowboy();
-
-    await detector.prepare("path/to/model");
+    try {
+      detector = Snowboy();
+      await detector.prepare(modelPath: "path/to/model");
+    } on PlatformException {}
   }
 
   void hotwordHandler() {
-    Audio.load('assets/ding.wav')..play()..dispose();
+    Audio.load('assets/ding.wav')
+      ..play()
+      ..dispose();
     setState(() {
       numDetected += 1;
     });

@@ -1,32 +1,19 @@
 /*
-  Copyright (c) 2021 Miðeind ehf.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without modification,
-  are permitted provided that the following conditions are met:
-
-  1. Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
-
-  2. Redistributions in binary form must reproduce the above copyright notice, this
-  list of conditions and the following disclaimer in the documentation and/or other
-  materials provided with the distribution.
-
-  3. Neither the name of the copyright holder nor the names of its contributors may
-  be used to endorse or promote products derived from this software without specific
-  prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
-  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-  POSSIBILITY OF SUCH DAMAGE.
-*/
+ * Copyright (C) 2021 Miðeind ehf.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 
 library flutter_snowboy;
 
@@ -34,15 +21,17 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
-class FlutterSnowboy {
+class Snowboy {
   MethodChannel _channel = const MethodChannel('plugin_snowboy');
   Function hotwordHandler;
 
-  FlutterSnowboy() {
-    _channel.setMethodCallHandler(channelCallbackHandler);
+  Snowboy() {
+    // Register handler to receive messages from native plugin
+    _channel.setMethodCallHandler(channelMethodCallHandler);
   }
 
-  Future<dynamic> channelCallbackHandler(MethodCall methodCall) async {
+  // Handle messages from the native plugin
+  Future<dynamic> channelMethodCallHandler(MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'hotword':
         if (hotwordHandler != null) {
@@ -58,12 +47,18 @@ class FlutterSnowboy {
     print("Error invoking Snowboy '$method' method: $msg");
   }
 
-  Future<bool> prepare(String modelPath,
-      [double sensitivity, double audioGain, bool applyFrontend]) async {
-    // Initialize Snowboy, load model and other required resources
+  // Instantiate Snowboy in the native plugin code, load provided
+  // model and other resources w. configuration. If no model path
+  // is provided, it defaults to loading a model that recognizes
+  // the hotword "Alexa".
+  Future<bool> prepare(
+      {String modelPath = "",
+      double sensitivity = 0.5,
+      double audioGain = 1.0,
+      bool applyFrontend = false}) async {
     try {
-      final bool success = await _channel
-          .invokeMethod('prepareSnowboy', [modelPath, sensitivity, audioGain, applyFrontend]);
+      final bool success = await _channel.invokeMethod(
+          'prepareSnowboy', [modelPath, sensitivity, audioGain, applyFrontend]);
       return success;
     } on PlatformException catch (e) {
       _err("prepare", e.toString());
@@ -71,8 +66,8 @@ class FlutterSnowboy {
     }
   }
 
+  // Activate hotword detection
   Future<bool> start(Function hwHandler) async {
-    // Activate hotword detection
     try {
       final bool success = await _channel.invokeMethod('startSnowboy');
       hotwordHandler = hwHandler;
@@ -83,8 +78,8 @@ class FlutterSnowboy {
     }
   }
 
+  // Suspend hotword detection
   Future<void> stop() async {
-    // Suspend hotword detection
     try {
       await _channel.invokeMethod('stopSnowboy');
     } on PlatformException catch (e) {
@@ -92,13 +87,12 @@ class FlutterSnowboy {
     }
   }
 
+  // Dispose of all resources
   Future<void> purge() async {
-    // Dispose of all resources
     try {
       await _channel.invokeMethod('purgeSnowboy');
     } on PlatformException catch (e) {
       _err("purge", e.toString());
     }
   }
-
 }
