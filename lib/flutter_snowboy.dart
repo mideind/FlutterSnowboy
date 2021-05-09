@@ -61,7 +61,7 @@ class Snowboy {
           'prepareSnowboy', [modelPath, sensitivity, audioGain, applyFrontend]);
       return success;
     } on PlatformException catch (e) {
-      _err("prepare", e.toString());
+      _err("prepareSnowboy", e.toString());
       return false;
     }
   }
@@ -73,7 +73,7 @@ class Snowboy {
       hotwordHandler = hwHandler;
       return success;
     } on PlatformException catch (e) {
-      _err("start", e.toString());
+      _err("startSnowboy", e.toString());
       return false;
     }
   }
@@ -83,7 +83,7 @@ class Snowboy {
     try {
       await _channel.invokeMethod('stopSnowboy');
     } on PlatformException catch (e) {
-      _err("stop", e.toString());
+      _err("stopSnowboy", e.toString());
     }
   }
 
@@ -92,7 +92,7 @@ class Snowboy {
     try {
       await _channel.invokeMethod('purgeSnowboy');
     } on PlatformException catch (e) {
-      _err("purge", e.toString());
+      _err("purgeSnowboy", e.toString());
     }
   }
 }

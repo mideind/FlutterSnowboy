@@ -1,4 +1,4 @@
-package com.example.flutter_snowboy_example;
+package is.mideind.flutter_snowboy_example;
 
 import io.flutter.embedding.android.FlutterActivity;
 

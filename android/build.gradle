@@ -1,4 +1,4 @@
-group 'com.example.flutter_snowboy'
+group 'is.mideind.flutter_snowboy'
 version '1.0'
 
 buildscript {

@@ -20,5 +20,5 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.flutter_snowboy
+        package: is.mideind.flutter_snowboy
         pluginClass: FlutterSnowboyPlugin

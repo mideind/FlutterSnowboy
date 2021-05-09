@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.flutter_snowboy_example">
+    package="is.mideind.flutter_snowboy_example">
    <application
         android:label="flutter_snowboy_example"
         android:icon="@mipmap/ic_launcher"

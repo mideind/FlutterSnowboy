@@ -15,7 +15,7 @@
  *
  */
 
-package com.example.flutter_snowboy;
+package is.mideind.flutter_snowboy;
 
 import java.util.*;
 import java.io.File;
@@ -101,7 +101,7 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
 
             // Get arguments from Flutter method call
             String modelPath = call.arguments.get("modelPath");
-            if (modelPath == null) {
+            if (modelPath == null || modelPath == "") {
                 modelPath = defaultModelPath;
             }
             String sensitivity = call.arguments.get("sensitivity") + "";
