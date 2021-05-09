@@ -93,13 +93,24 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
     public void prepareSnowboy(@NonNull MethodCall call, @NonNull Result result) {
         String rsrcPath = context.getFilesDir().getAbsolutePath() + "/" + Constants.ASSETS_DIRNAME;
         String commonPath = rsrcPath + "/" + Constants.COMMON_RES_FILENAME;
-        String modelPath = rsrcPath + "/" + Constants.DEFAULT_MODEL_FILENAME;
+        String defaultModelPath = rsrcPath + "/" + Constants.DEFAULT_MODEL_FILENAME;
 
         try {
             // Copy assets required by Snowboy to filesystem
             AppResCopy.copyFilesFromAssets(context, Constants.ASSETS_DIRNAME, rsrcPath, true);
+
+            // Get arguments from Flutter method call
+            String modelPath = call.arguments.get("modelPath");
+            if (modelPath == null) {
+                modelPath = defaultModelPath;
+            }
+            String sensitivity = call.arguments.get("sensitivity") + "";
+            double audioGain = call.arguments.get("audioGain");
+            boolean applyFrontend = call.arguments.get("applyFrontend");
+
             // Create detection thread
-            recordingThread = new RecordingThread(handle, commonPath, modelPath, "0.5", 1.0, false);
+            recordingThread = new RecordingThread(handle, commonPath, modelPath,
+                    sensitivity, audioGain, applyFrontend);
         } catch (Exception e) {
             e.printStackTrace();
             result.success(false);
