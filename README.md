@@ -1,10 +1,10 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-# Flutter Snowboy package
+# Flutter Snowboy plugin
 
 *This plugin is a work in progress. Things may not work.*
 
-This repository contains the source code to the Flutter Snowboy package.
+This repository contains the source code to a Flutter Snowboy package.
 [Snowboy](https://github.com/seasalt-ai/snowboy) is a cross-platform
 DNN-based hotword detection toolkit.
 

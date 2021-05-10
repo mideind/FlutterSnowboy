@@ -147,6 +147,16 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
         result.success(null);
     }
 
+    public void getSnowboyState(@NonNull MethodCall call, @NonNull Result result) {
+        try {
+            // Implement me
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.success(-1);
+        }
+        result.success(0);
+    }
+
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "plugin_snowboy");
@@ -169,6 +179,8 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
             stopSnowboy(call, result);
         } else if (call.method.equals("purgeSnowboy")) {
             purgeSnowboy(call, result);
+        } else if (call.method.equals("getSnowboyState")) {
+            getSnowboyState(call, result);
         } else {
             result.notImplemented();
         }

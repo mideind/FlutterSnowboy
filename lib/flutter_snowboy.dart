@@ -95,4 +95,18 @@ class Snowboy {
       _err("purgeSnowboy", e.toString());
     }
   }
+
+  // Get state of Snowboy in native code. Returns int value.
+  // Return codes:
+  // -1: Error occurred
+  // 0: Instantiated
+  // 1: Prepared
+  // 2: Running
+  Future<int> state() async {
+    try {
+      await _channel.invokeMethod('getSnowboyState');
+    } on PlatformException catch (e) {
+      _err("getSnowboyState", e.toString());
+    }
+  }
 }
