@@ -31,6 +31,8 @@ jobs:
             flutter-version: '2.0.6'
       - run: flutter pub get
       - run: flutter test
+      - run: dart analyze lib
+      - run: dart analyze example
       - run: flutter build apk
       - name: Slack notification
         uses: 8398a7/action-slack@v2
