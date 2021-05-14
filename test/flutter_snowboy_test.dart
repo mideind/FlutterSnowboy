@@ -15,10 +15,17 @@
  *
  */
 
-// import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
-// import 'package:flutter_snowboy/flutter_snowboy.dart';
+import 'package:flutter_snowboy/flutter_snowboy.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   // Tests
+  test('Instantiation', () {
+    var s = Snowboy();
+    expect(s, s);
+  });
+
 }
