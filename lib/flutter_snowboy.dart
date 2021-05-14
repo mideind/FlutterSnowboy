@@ -21,6 +21,13 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
+enum SnowboyStatus {
+  instantiated,
+  prepared,
+  running,
+  purged
+}
+
 class Snowboy {
   MethodChannel _channel = const MethodChannel('plugin_snowboy');
   Function hotwordHandler;
@@ -96,13 +103,8 @@ class Snowboy {
     }
   }
 
-  // Get state of Snowboy in native code. Returns int value.
-  // Return codes:
-  // -1: Error occurred
-  // 0: Instantiated
-  // 1: Prepared
-  // 2: Running
-  Future<int> state() async {
+  // Get state of Snowboy in native code. Returns SnowboyStatus enum.
+  Future<SnowboyStatus> state() async {
     try {
       await _channel.invokeMethod('getSnowboyState');
     } on PlatformException catch (e) {
