@@ -25,7 +25,8 @@ enum SnowboyStatus {
   instantiated,
   prepared,
   running,
-  purged
+  purged,
+  error
 }
 
 class Snowboy {
@@ -106,9 +107,11 @@ class Snowboy {
   // Get state of Snowboy in native code. Returns SnowboyStatus enum.
   Future<SnowboyStatus> state() async {
     try {
-      await _channel.invokeMethod('getSnowboyState');
+      SnowboyStatus s = await _channel.invokeMethod('getSnowboyState');
+      return s;
     } on PlatformException catch (e) {
       _err("getSnowboyState", e.toString());
     }
+    return SnowboyStatus.error;
   }
 }

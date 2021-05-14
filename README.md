@@ -56,6 +56,27 @@ detector.stop();
 detector.purge();
 ```
 
+### Get state
+
+```dart
+/*
+enum SnowboyStatus {
+  instantiated,
+  prepared,
+  running,
+  purged,
+  error
+}
+*/
+
+SnowboyState s = detector.state();
+if (s != SnowboyState.prepared) {
+    detector.prepare();
+}
+detector.start();
+
+```
+
 ## License
 
 Copyright (C) 2021 Miðeind ehf.  
