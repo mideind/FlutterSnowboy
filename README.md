@@ -1,8 +1,9 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Build](https://github.com/mideind/flutter_snowboy/actions/workflows/main.yml/badge.svg)]()
 
 # Flutter Snowboy plugin
 
-*This plugin is a work in progress. Things may not work.*
+*WARNING! This plugin is very much a work in progress. Things may not work.*
 
 This repository contains the source code to a Flutter Snowboy package.
 [Snowboy](https://github.com/seasalt-ai/snowboy) is a cross-platform
@@ -79,7 +80,7 @@ detector.start();
 
 ## License
 
-Copyright (C) 2021 Miðeind ehf.  
+Copyright (C) 2021 [Miðeind ehf.](https://mideind.is)  
 Copyright (C) 2016-2020 KITT.AI
 
 Licensed under the Apache License, Version 2.0 (the "License");
