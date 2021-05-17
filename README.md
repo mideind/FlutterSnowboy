@@ -84,8 +84,8 @@ this repository and open pull requests to your heart's content.
 
 ## License
 
-Copyright (C) 2021 [Miðeind ehf.](https://mideind.is)  
-Copyright (C) 2016-2020 KITT.AI
+flutter_snowboy is Copyright (C) 2021 [Miðeind ehf.](https://mideind.is)  
+Snowboy is Copyright (C) 2016-2020 KITT.AI
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
