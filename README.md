@@ -65,7 +65,6 @@ enum SnowboyStatus {
   instantiated,
   prepared,
   running,
-  purged,
   error
 }
 */

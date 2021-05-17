@@ -105,7 +105,7 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
             //     System.out.println(args.get(counter).getClass().getName());
             // }
 
-            String modelPath = (String)args.get(0);
+            String modelPath = (String) args.get(0);
             // Basic sanity check
             if (modelPath == null || modelPath.trim().isEmpty()) {
                 System.out.println("Invalid model path: '" + modelPath + "'");
@@ -115,15 +115,15 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
             // Make sure model exists at path
             File modelFile = new File(modelPath);
             if (!modelFile.exists()) {
-                System.out.println("No model at path: '" + modelPath + "'");
+                System.out.println("No model at path: '" + modelPath + "', reverting to default model");
                 modelPath = defaultModelPath;
             }
 
             System.out.println("Final model path: '" + modelPath + "'");
 
             String sensitivity = args.get(1) + "";
-            double audioGain = (double)args.get(2);
-            boolean applyFrontend = (boolean)args.get(3);
+            double audioGain = (double) args.get(2);
+            boolean applyFrontend = (boolean) args.get(3);
 
             // Create detection thread
             recordingThread = new RecordingThread(handle, commonPath, modelPath,
