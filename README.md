@@ -9,7 +9,7 @@ This repository contains the source code to a Flutter Snowboy package.
 [Snowboy](https://github.com/seasalt-ai/snowboy) is a cross-platform
 DNN-based hotword detection toolkit.
 
-Currently only supports Android.
+Currently only supports Android but iOS support is under way.
 
 ## Models
 
@@ -76,6 +76,11 @@ if (s != SnowboyState.prepared) {
 detector.start();
 
 ```
+
+## Contributing
+
+All contributions are welcome. If you'd like to lend and hand, feel free to fork
+this repository and open pull requests to your heart's content.
 
 ## License
 
