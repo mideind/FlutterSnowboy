@@ -47,11 +47,11 @@ public class RecordingThread {
     private boolean shouldContinue;
 
     public RecordingThread(Handler handler, String commonPath, String modelPath,
-                           String sensitivity, float audioGain, boolean applyFrontend) {
+                           String sensitivity, double audioGain, boolean applyFrontend) {
         this.handler = handler;
         this.detector = new SnowboyDetect(commonPath, modelPath);
         this.detector.SetSensitivity(sensitivity);
-        this.detector.SetAudioGain(audioGain);
+        this.detector.SetAudioGain((float)audioGain);
         this.detector.ApplyFrontend(applyFrontend);
     }
 

@@ -51,7 +51,7 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       detector = Snowboy();
-      await detector.prepare(modelPath: "path/to/model");
+      await detector.prepare(modelPath: "/path/to/model");
     } on PlatformException {}
   }
 

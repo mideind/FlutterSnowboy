@@ -99,14 +99,31 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
             // Copy assets required by Snowboy to filesystem
             AppResCopy.copyFilesFromAssets(context, Constants.ASSETS_DIRNAME, rsrcPath, true);
 
-            // Get arguments from Flutter method call
-            String modelPath = call.arguments.get("modelPath");
-            if (modelPath == null || modelPath == "") {
+            ArrayList args = call.arguments();
+            // System.out.println(args.toString());
+            // for (int counter = 0; counter < args.size(); counter++) {
+            //     System.out.println(args.get(counter).getClass().getName());
+            // }
+
+            String modelPath = (String)args.get(0);
+            // Basic sanity check
+            if (modelPath == null || modelPath.trim().isEmpty()) {
+                System.out.println("Invalid model path: '" + modelPath + "'");
                 modelPath = defaultModelPath;
             }
-            String sensitivity = call.arguments.get("sensitivity") + "";
-            double audioGain = call.arguments.get("audioGain");
-            boolean applyFrontend = call.arguments.get("applyFrontend");
+
+            // Make sure model exists at path
+            File modelFile = new File(modelPath);
+            if (!modelFile.exists()) {
+                System.out.println("No model at path: '" + modelPath + "'");
+                modelPath = defaultModelPath;
+            }
+
+            System.out.println("Final model path: '" + modelPath + "'");
+
+            String sensitivity = args.get(1) + "";
+            double audioGain = (double)args.get(2);
+            boolean applyFrontend = (boolean)args.get(3);
 
             // Create detection thread
             recordingThread = new RecordingThread(handle, commonPath, modelPath,
