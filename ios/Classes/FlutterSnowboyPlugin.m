@@ -1,6 +1,7 @@
 #import "FlutterSnowboyPlugin.h"
 
 @implementation FlutterSnowboyPlugin
+
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   FlutterMethodChannel* channel = [FlutterMethodChannel
       methodChannelWithName:@"flutter_snowboy"
