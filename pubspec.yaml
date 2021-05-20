@@ -23,3 +23,5 @@ flutter:
       android:
         package: is.mideind.flutter_snowboy
         pluginClass: FlutterSnowboyPlugin
+      ios:
+        pluginClass: FlutterSnowboyPlugin
