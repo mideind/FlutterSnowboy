@@ -1,0 +1,6 @@
+framework module Snowboy {
+  umbrella header "Snowboy.h"
+
+  export *
+  module * { export * }
+}

@@ -11,10 +11,11 @@ Pod::Spec.new do |s|
   s.license          = { :file => '../LICENSE.txt' }
   s.author           = { 'Miðeind' => 'mideind@mideind.is' }
   s.source           = { :path => '.' }
-  s.source_files     = ['Classes/**/*']
-  # s.public_header_files = ['Classes/**/*.h']
-  # s.vendored_libraries = ['Assets/**/*.a']
-  s.private_header_files = ['Assets/**/*.h']
+  s.source_files     = ['Classes/**/*.h', 'Classes/**/*.m', 'Classes/**/*.mm']
+  s.public_header_files = ['Classes/**/*.h']
+  s.vendored_frameworks = ['Snowboy.framework']
+  # s.vendored_libraries = ['Assets/Snowboy/libsnowboy-detect.a']
+  # s.private_header_files = ['Assets/**/*.h']
   s.resources        = 'Assets/**/*'
   s.dependency 'Flutter'
   s.platform         = :ios, '12.0'

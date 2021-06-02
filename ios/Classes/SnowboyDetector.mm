@@ -17,7 +17,7 @@
 
 #import "Common.h"
 #import "SnowboyDetector.h"
-#import "snowboy-detect.h"
+#import <Snowboy/Snowboy.h>
 
 // Snowboy detector configuration
 #define SNOWBOY_MODEL_NAME      @"hae_embla"
