@@ -13,13 +13,20 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files     = ['Classes/**/*.h', 'Classes/**/*.m', 'Classes/**/*.mm']
   s.public_header_files = ['Classes/**/*.h']
-  s.vendored_frameworks = ['Snowboy.framework']
+  s.vendored_frameworks = 'Snowboy.framework'
   # s.vendored_libraries = ['Assets/Snowboy/libsnowboy-detect.a']
   # s.private_header_files = ['Assets/**/*.h']
   s.resources        = 'Assets/**/*'
   s.dependency 'Flutter'
   s.platform         = :ios, '12.0'
-
+  # s.xcconfig = {
+  #    'CLANG_CXX_LANGUAGE_STANDARD' => 'c++11',
+  #    'CLANG_CXX_LIBRARY' => 'libc++',
+  # }
   # Flutter.framework does not contain a i386 slice.
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
+  s.pod_target_xcconfig = {     'CLANG_CXX_LANGUAGE_STANDARD' => 'c++11',
+                                'CLANG_CXX_LIBRARY' => 'libc++',
+                                'GCC_INPUT_FILETYPE' => 'sourcecode.cpp.objcpp',
+                                'DEFINES_MODULE' => 'YES',
+                                'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
 end

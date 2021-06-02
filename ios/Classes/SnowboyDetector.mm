@@ -17,7 +17,7 @@
 
 #import "Common.h"
 #import "SnowboyDetector.h"
-#import <Snowboy/Snowboy.h>
+//#import <Snowboy/Snowboy.h>
 
 // Snowboy detector configuration
 #define SNOWBOY_MODEL_NAME      @"hae_embla"
@@ -27,7 +27,7 @@
 
 @interface SnowboyDetector()
 {
-    snowboy::SnowboyDetect* _snowboyDetect;
+    //snowboy::SnowboyDetect* _snowboyDetect;
 }
 @property (weak) id <HotwordDetectorDelegate>delegate;
 @property (readonly) BOOL isListening;
@@ -49,7 +49,7 @@
     // TODO: Maybe re-initialise every time listening is resumed?
     if (!self.inited) {
         DLog(@"Initing Snowboy hotword detector");
-        _snowboyDetect = NULL;
+        /*_snowboyDetect = NULL;
         
         NSString *commonPath = [[NSBundle mainBundle] pathForResource:@"common" ofType:@"res"];
         NSString *modelPath = [[NSBundle mainBundle] pathForResource:SNOWBOY_MODEL_NAME ofType:@"umdl"];
@@ -65,7 +65,7 @@
         _snowboyDetect->SetSensitivity(SNOWBOY_SENSITIVITY);
         _snowboyDetect->SetAudioGain(SNOWBOY_AUDIO_GAIN);
         _snowboyDetect->ApplyFrontend(SNOWBOY_APPLY_FRONTEND);
-        
+        */
         [[AudioRecordingService sharedInstance] prepare];
         
         // Start listening
@@ -90,7 +90,7 @@
 }
 
 - (void)processSampleData:(NSData *)data {
-    dispatch_async(dispatch_get_main_queue(),^{
+    /*dispatch_async(dispatch_get_main_queue(),^{
         const int16_t *bytes = (int16_t *)[data bytes];
         const int len = (int)[data length]/2; // 16-bit audio
         int result = _snowboyDetect->RunDetection((const int16_t *)bytes, len);
@@ -100,7 +100,7 @@
                 [self.delegate didHearHotword:SNOWBOY_MODEL_NAME];
             }
         }
-    });
+    });*/
 }
 
 @end
