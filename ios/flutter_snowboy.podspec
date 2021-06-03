@@ -19,6 +19,8 @@ Pod::Spec.new do |s|
   s.resources        = 'Assets/**/*'
   s.dependency 'Flutter'
   s.platform         = :ios, '12.0'
+  s.framework        = 'Accelerate'
+
   # s.xcconfig = {
   #    'CLANG_CXX_LANGUAGE_STANDARD' => 'c++11',
   #    'CLANG_CXX_LIBRARY' => 'libc++',

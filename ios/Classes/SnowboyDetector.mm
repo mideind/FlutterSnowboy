@@ -45,12 +45,11 @@
     return instance;
 }
 
-- (BOOL)startListening {
-    // TODO: Maybe re-initialise every time listening is resumed?
+_ (void)setUpDetector {
     if (!self.inited) {
         DLog(@"Initing Snowboy hotword detector");
         _snowboyDetect = NULL;
-        
+
         NSString *commonPath = [[NSBundle mainBundle] pathForResource:@"common" ofType:@"res"];
         NSString *modelPath = [[NSBundle mainBundle] pathForResource:SNOWBOY_MODEL_NAME ofType:@"umdl"];
         if (![[NSFileManager defaultManager] fileExistsAtPath:commonPath] ||
@@ -58,7 +57,7 @@
             DLog(@"Unable to init Snowboy, bundle resources missing");
             return FALSE;
         }
-        
+
         // Create and configure Snowboy C++ detector object
         _snowboyDetect = new snowboy::SnowboyDetect(std::string([commonPath UTF8String]),
                                                     std::string([modelPath UTF8String]));
@@ -67,11 +66,16 @@
         _snowboyDetect->ApplyFrontend(SNOWBOY_APPLY_FRONTEND);
 
         [[AudioRecordingService sharedInstance] prepare];
-        
+
         // Start listening
         self.inited = TRUE;
     }
-    
+
+}
+
+- (BOOL)startListening {
+
+    [self setUpDetector];
     [self _startListening];
     
     _isListening = TRUE;
@@ -87,6 +91,15 @@
 - (void)stopListening {
     [[AudioRecordingService sharedInstance] stop];
     _isListening = FALSE;
+}
+
+- (void)purge {
+    delete _snowboyDetect;
+    self.inited = FALSE;
+}
+
+- (int)state {
+    return 0;
 }
 
 - (void)processSampleData:(NSData *)data {

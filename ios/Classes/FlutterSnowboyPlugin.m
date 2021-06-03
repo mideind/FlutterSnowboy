@@ -16,23 +16,54 @@
  */
 
 #import "FlutterSnowboyPlugin.h"
+#import "SnowboyDetector.h"
 
 @implementation FlutterSnowboyPlugin
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  FlutterMethodChannel* channel = [FlutterMethodChannel
-      methodChannelWithName:@"flutter_snowboy"
-            binaryMessenger:[registrar messenger]];
-  FlutterSnowboyPlugin* instance = [[FlutterSnowboyPlugin alloc] init];
-  [registrar addMethodCallDelegate:instance channel:channel];
+    FlutterMethodChannel* channel = [FlutterMethodChannel methodChannelWithName:@"flutter_snowboy"
+                                                                binaryMessenger:[registrar messenger]];
+    FlutterSnowboyPlugin* instance = [FlutterSnowboyPlugin new];
+    [registrar addMethodCallDelegate:instance channel:channel];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-  if ([@"getPlatformVersion" isEqualToString:call.method]) {
-    result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
-  } else {
-    result(FlutterMethodNotImplemented);
-  }
+    if ([call.method isEqualToString:@"prepareSnowboy"]) {
+        // TODO: Pass params to prepare: function
+        // [self prepare:modelName sensitivity:sensitivity audioGain:audioGain applyFrontend:applyFrontend]
+        result(NULL);
+    } else if ([call.method isEqualToString:@"startSnowboy"]) {
+        result([self start]);
+    } else if ([call.method isEqualToString:@"stopSnowboy"]) {
+        result([self stop]);
+    } else if ([call.method isEqualToString:@"purgeSnowboy"]) {
+        result([self purge]);
+    } else if ([call.method isEqualToString:@"getSnowboyState"]) {
+        result([self state]);
+    } else {
+        result(FlutterMethodNotImplemented);
+    }
+}
+
+- (BOOL)prepare:(NSString *)modelName sensitivity:(NSNumber *)sensitivity
+audioGain:(NSNumber *)audioGain applyFrontend:(BOOL)applyFrontend {
+    [[SnowboyDetector sharedInstance] setUpDetector];
+}
+
+- (void)start:(void (^nullability)(void))hotwordHandler {
+    [[SnowboyDetector sharedInstance] startListening];
+}
+
+- (void)stop {
+    [[SnowboyDetector sharedInstance] stopListening];
+}
+
+- (void)purge {
+    [[SnowboyDetector sharedInstance] purge];
+}
+
+- (int)state {
+    return [[SnowboyDetector sharedInstance] state];
 }
 
 @end
