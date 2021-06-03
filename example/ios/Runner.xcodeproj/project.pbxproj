@@ -15,6 +15,7 @@
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		EB5F32BFB9618B616D3713A6 /* libPods-Runner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B9C0D2A6A6C67371F161C6A /* libPods-Runner.a */; };
+		F44856512668F2960098872C /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F44856502668F2960098872C /* Accelerate.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +50,7 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C4E8D52815BAA09648D9E388 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		F44856502668F2960098872C /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB5F32BFB9618B616D3713A6 /* libPods-Runner.a in Frameworks */,
+				F44856512668F2960098872C /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,6 +123,7 @@
 		C1AC7649944008E5BBEFFE1F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F44856502668F2960098872C /* Accelerate.framework */,
 				7B9C0D2A6A6C67371F161C6A /* libPods-Runner.a */,
 			);
 			name = Frameworks;
