@@ -45,7 +45,7 @@
     return instance;
 }
 
-_ (void)setUpDetector {
+- (BOOL)setUpDetector {
     if (!self.inited) {
         DLog(@"Initing Snowboy hotword detector");
         _snowboyDetect = NULL;
@@ -70,16 +70,13 @@ _ (void)setUpDetector {
         // Start listening
         self.inited = TRUE;
     }
-
+    return TRUE;
 }
 
 - (BOOL)startListening {
-
     [self setUpDetector];
     [self _startListening];
-    
     _isListening = TRUE;
-    
     return TRUE;
 }
 

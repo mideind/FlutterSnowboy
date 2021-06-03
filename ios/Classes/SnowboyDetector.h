@@ -21,7 +21,7 @@
 
 @interface SnowboyDetector : NSObject <HotwordDetector, AudioRecordingServiceDelegate>
 
-- (void)setUpDetector;
+- (BOOL)setUpDetector;
 - (void)purge;
 - (int)state;
 
