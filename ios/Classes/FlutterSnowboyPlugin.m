@@ -20,14 +20,14 @@
 
 @implementation FlutterSnowboyPlugin
 
-+ (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-    FlutterMethodChannel* channel = [FlutterMethodChannel methodChannelWithName:@"flutter_snowboy"
++ (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+    FlutterMethodChannel *channel = [FlutterMethodChannel methodChannelWithName:@"flutter_snowboy"
                                                                 binaryMessenger:[registrar messenger]];
-    FlutterSnowboyPlugin* instance = [FlutterSnowboyPlugin new];
+    FlutterSnowboyPlugin *instance = [FlutterSnowboyPlugin new];
     [registrar addMethodCallDelegate:instance channel:channel];
 }
 
-- (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
+- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
     if ([call.method isEqualToString:@"prepareSnowboy"]) {
         // TODO: Pass params to prepare: function
         // [self prepare:modelName sensitivity:sensitivity audioGain:audioGain applyFrontend:applyFrontend]

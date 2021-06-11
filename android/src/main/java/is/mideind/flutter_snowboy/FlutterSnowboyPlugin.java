@@ -41,8 +41,7 @@ import ai.kitt.snowboy.audio.RecordingThread;
 
 
 public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
-
-    // The MethodChannel that will the communication between Flutter and native Android
+    // The MethodChannel that handles communication between Flutter and native Android
     // This local reference serves to register the plugin with the Flutter Engine and unregister it
     // when the Flutter Engine is detached from the Activity
     private MethodChannel channel;
@@ -69,23 +68,6 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
                 public void notImplemented() {
                 }
             });
-
-            // MsgEnum message = MsgEnum.getMsgEnum(msg.what);
-            // switch(message) {
-            //     case MSG_ACTIVE:
-            //         break;
-            //     case MSG_INFO:
-            //         break;
-            //     case MSG_VAD_SPEECH:
-            //         break;
-            //     case MSG_VAD_NOSPEECH:
-            //         break;
-            //     case MSG_ERROR:
-            //         break;
-            //     default:
-            //         super.handleMessage(msg);
-            //         break;
-            //  }
         }
     };
 
@@ -93,30 +75,28 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
     public void prepareSnowboy(@NonNull MethodCall call, @NonNull Result result) {
         String rsrcPath = context.getFilesDir().getAbsolutePath() + "/" + Constants.ASSETS_DIRNAME;
         String commonPath = rsrcPath + "/" + Constants.COMMON_RES_FILENAME;
-        String defaultModelPath = rsrcPath + "/" + Constants.DEFAULT_MODEL_FILENAME;
 
         try {
             // Copy assets required by Snowboy to filesystem
             AppResCopy.copyFilesFromAssets(context, Constants.ASSETS_DIRNAME, rsrcPath, true);
 
             ArrayList args = call.arguments();
-            // System.out.println(args.toString());
-            // for (int counter = 0; counter < args.size(); counter++) {
-            //     System.out.println(args.get(counter).getClass().getName());
-            // }
 
             String modelPath = (String) args.get(0);
+
             // Basic sanity check
             if (modelPath == null || modelPath.trim().isEmpty()) {
                 System.out.println("Invalid model path: '" + modelPath + "'");
-                modelPath = defaultModelPath;
+                result.success(false);
+                return;
             }
 
             // Make sure model exists at path
             File modelFile = new File(modelPath);
             if (!modelFile.exists()) {
-                System.out.println("No model at path: '" + modelPath + "', reverting to default model");
-                modelPath = defaultModelPath;
+                System.out.println("No model at path: '" + modelPath + "'");
+                result.success(false);
+                return;
             }
 
             System.out.println("Final model path: '" + modelPath + "'");
