@@ -14,6 +14,8 @@ dependencies:
     sdk: flutter
 
   audiofileplayer: '>=2.0.0'
+  path_provider: '>=2.0.0'
+
   flutter_snowboy:
     # When depending on this package from a real application you should use:
     #   flutter_snowboy: ^x.y.z

@@ -17,12 +17,14 @@
 
 // Example application demonstrating use of the Flutter Snowboy plugin.
 
-import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_snowboy/flutter_snowboy.dart';
 import 'package:audiofileplayer/audiofileplayer.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(SnowboyExampleApp());
@@ -51,8 +53,22 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       detector = Snowboy();
-      await detector.prepare(modelPath: "/path/to/model");
+      String modelPath = await copyModelToFilesystem("alexa.umdl");
+      await detector.prepare(modelPath: modelPath);
     } on PlatformException {}
+  }
+
+  // Copy model from asset bundle to temp directory on the filesystem
+  static Future<String> copyModelToFilesystem(String filename) async {
+    String dir = (await getTemporaryDirectory()).path;
+    String finalPath = "$dir/$filename";
+    if (await File(finalPath).exists() == true) {
+      return finalPath;
+    }
+    ByteData bytes = await rootBundle.load("assets/$filename");
+    final buffer = bytes.buffer;
+    File(finalPath).writeAsBytes(buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
+    return finalPath;
   }
 
   void hotwordHandler() {
