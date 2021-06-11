@@ -1,5 +1,5 @@
 name: flutter_snowboy
-description: A Flutter plugin for Snowboy hotword detection
+description: Flutter plugin for Snowboy hotword detection
 version: 0.0.1+1
 author: Sveinbjorn Thordarson (Miðeind ehf.)
 homepage: https://github.com/mideind/flutter_snowboy
