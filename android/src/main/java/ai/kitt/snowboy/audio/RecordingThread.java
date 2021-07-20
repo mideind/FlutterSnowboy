@@ -103,12 +103,10 @@ public class RecordingThread {
                 bufferSize);
 
         if (record.getState() != AudioRecord.STATE_INITIALIZED) {
-            Log.e(TAG, "Audio Record can't initialize!");
+            Log.e(TAG, "Audio Record can't initialize! (Missing microphone permission?)");
             return;
         }
         record.startRecording();
-
-        Log.v(TAG, "Start recording");
 
         long shortsRead = 0;
         detector.Reset();
