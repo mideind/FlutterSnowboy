@@ -54,7 +54,7 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
     try {
       detector = Snowboy();
       String modelPath = await copyModelToFilesystem("alexa.umdl");
-      await detector.prepare(modelPath: modelPath);
+      await detector.prepare(hotwordHandler, modelPath: modelPath);
     } on PlatformException {}
   }
 
@@ -88,12 +88,10 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
     bool r;
 
     if (running == false) {
-      detector.start(hotwordHandler);
       s = "Snowboy is running";
       t = "Stop detection";
       r = true;
     } else {
-      detector.stop();
       s = "Snowboy is not running";
       t = "Start detection";
       r = false;

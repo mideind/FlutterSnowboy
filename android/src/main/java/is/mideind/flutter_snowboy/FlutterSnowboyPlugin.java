@@ -37,8 +37,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 import ai.kitt.snowboy.Constants;
 import ai.kitt.snowboy.AppResCopy;
-import ai.kitt.snowboy.audio.RecordingThread;
-
+import is.mideind.flutter_snowboy.Detector;
 
 public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
     // The MethodChannel that handles communication between Flutter and native Android
@@ -46,14 +45,14 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
     // when the Flutter Engine is detached from the Activity
     private MethodChannel channel;
 
-    private RecordingThread recordingThread;
     private Context context;
+    private Detector detector;
 
     // Handler invoked when hotword is detected
     public Handler handle = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            //System.err.println("Handler invoked!");
+            System.err.println("Handler invoked!");
 
             channel.invokeMethod("hotword", null, new Result() {
                 @Override
@@ -71,7 +70,6 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
         }
     };
 
-    // Instantiate a Snowboy recording and detection thread
     public void prepareSnowboy(@NonNull MethodCall call, @NonNull Result result) {
         String rsrcPath = context.getFilesDir().getAbsolutePath() + "/" + Constants.ASSETS_DIRNAME;
         String commonPath = rsrcPath + "/" + Constants.COMMON_RES_FILENAME;
@@ -105,9 +103,9 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
             double audioGain = (double) args.get(2);
             boolean applyFrontend = (boolean) args.get(3);
 
-            // Create detection thread
-            recordingThread = new RecordingThread(handle, commonPath, modelPath,
+            Detector detector = new Detector(handle, commonPath, modelPath,
                     sensitivity, audioGain, applyFrontend);
+
         } catch (Exception e) {
             e.printStackTrace();
             result.success(false);
@@ -116,42 +114,20 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
         result.success(true);
     }
 
-    public void startSnowboy(@NonNull MethodCall call, @NonNull Result result) {
+    public void detectSnowboy(@NonNull MethodCall call, @NonNull Result result) {
         try {
-            if (recordingThread != null) {
-                recordingThread.startRecording();
-            }
+            ArrayList args = call.arguments();
+            byte[] bytes = (byte[]) args.get(0);
+            detector.detect(bytes);
         } catch (Exception e) {
             e.printStackTrace();
             result.success(false);
         }
         result.success(true);
-    }
-
-    public void stopSnowboy(@NonNull MethodCall call, @NonNull Result result) {
-        try {
-            if (recordingThread != null) {
-                recordingThread.stopRecording();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        result.success(null);
     }
 
     public void purgeSnowboy(@NonNull MethodCall call, @NonNull Result result) {
-        recordingThread = null;
         result.success(null);
-    }
-
-    public void getSnowboyState(@NonNull MethodCall call, @NonNull Result result) {
-        try {
-            // Implement me
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.success(-1);
-        }
-        result.success(0);
     }
 
     @Override
@@ -170,14 +146,10 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         if (call.method.equals("prepareSnowboy")) {
             prepareSnowboy(call, result);
-        } else if (call.method.equals("startSnowboy")) {
-            startSnowboy(call, result);
-        } else if (call.method.equals("stopSnowboy")) {
-            stopSnowboy(call, result);
+        } else if (call.method.equals("detectSnowboy")) {
+            detectSnowboy(call, result);
         } else if (call.method.equals("purgeSnowboy")) {
             purgeSnowboy(call, result);
-        } else if (call.method.equals("getSnowboyState")) {
-            getSnowboyState(call, result);
         } else {
             result.notImplemented();
         }

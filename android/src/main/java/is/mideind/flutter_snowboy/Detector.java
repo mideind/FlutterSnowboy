@@ -17,7 +17,16 @@
 
 package is.mideind.flutter_snowboy;
 
+import ai.kitt.snowboy.Constants;
+import ai.kitt.snowboy.MsgEnum;
 import ai.kitt.snowboy.SnowboyDetect;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 
 
 public class Detector {
@@ -26,25 +35,24 @@ public class Detector {
         System.loadLibrary("snowboy-detect-android");
     }
 
-    private static final String TAG = RecordingThread.class.getSimpleName();
     private final Handler handler;
-    private final SnowboyDetect detector;
-    private Thread thread;
-    private boolean shouldContinue;
+    private final SnowboyDetect snowboy;
 
     public Detector(Handler handler, String commonPath, String modelPath,
-                           String sensitivity, double audioGain, boolean applyFrontend) {
+                    String sensitivity, double audioGain, boolean applyFrontend) {
         this.handler = handler;
-        this.detector = new SnowboyDetect(commonPath, modelPath);
-        this.detector.SetSensitivity(sensitivity);
-        this.detector.SetAudioGain((float)audioGain);
-        this.detector.ApplyFrontend(applyFrontend);
+        this.snowboy = new SnowboyDetect(commonPath, modelPath);
+        this.snowboy.SetSensitivity(sensitivity);
+        this.snowboy.SetAudioGain((float) audioGain);
+        this.snowboy.ApplyFrontend(applyFrontend);
     }
 
-    public void detect(byte[] audioData) {
+    public void detect(byte[] audioBuffer) {
         // Feed data into SnowboyDetect
         // Snowboy hotword detection.
-        int result = detector.RunDetection(audioData, audioData.length);
+        short[] audioData = new short[audioBuffer.length / 2];
+        ByteBuffer.wrap(audioBuffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(audioData);
+        int result = this.snowboy.RunDetection(audioData, audioData.length);
 
         if (result == -2) {
             // post a higher CPU usage:

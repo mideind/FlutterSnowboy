@@ -21,13 +21,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
-enum SnowboyStatus {
-  instantiated,
-  prepared,
-  running,
-  purged,
-  error
-}
+enum SnowboyStatus { instantiated, prepared, running, purged, error }
 
 class Snowboy {
   MethodChannel _channel = const MethodChannel('plugin_snowboy');
@@ -59,11 +53,12 @@ class Snowboy {
   // model and other resources, w. configuration. If no model path
   // is provided, defaults to loading a model that recognizes the
   // hotword "Alexa".
-  Future<bool> prepare(
+  Future<bool> prepare(Function hwHandler,
       {String modelPath = "",
       double sensitivity = 0.5,
       double audioGain = 1.0,
       bool applyFrontend = false}) async {
+    hotwordHandler = hwHandler;
     try {
       final bool success = await _channel.invokeMethod(
           'prepareSnowboy', [modelPath, sensitivity, audioGain, applyFrontend]);
@@ -74,24 +69,11 @@ class Snowboy {
     }
   }
 
-  // Activate hotword detection
-  Future<bool> start(Function hwHandler) async {
+  Future<void> detect() async {
     try {
-      final bool success = await _channel.invokeMethod('startSnowboy');
-      hotwordHandler = hwHandler;
-      return success;
+      await _channel.invokeMethod('detectSnowboy');
     } on PlatformException catch (e) {
-      _err("startSnowboy", e.toString());
-      return false;
-    }
-  }
-
-  // Suspend hotword detection
-  Future<void> stop() async {
-    try {
-      await _channel.invokeMethod('stopSnowboy');
-    } on PlatformException catch (e) {
-      _err("stopSnowboy", e.toString());
+      _err("detectSnowboy", e.toString());
     }
   }
 
@@ -102,16 +84,5 @@ class Snowboy {
     } on PlatformException catch (e) {
       _err("purgeSnowboy", e.toString());
     }
-  }
-
-  // Get state of Snowboy in native code. Returns SnowboyStatus enum.
-  Future<SnowboyStatus> state() async {
-    try {
-      SnowboyStatus s = await _channel.invokeMethod('getSnowboyState');
-      return s;
-    } on PlatformException catch (e) {
-      _err("getSnowboyState", e.toString());
-    }
-    return SnowboyStatus.error;
   }
 }
