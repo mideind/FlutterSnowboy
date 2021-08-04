@@ -18,10 +18,9 @@
 library flutter_snowboy;
 
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
-
-enum SnowboyStatus { instantiated, prepared, running, purged, error }
 
 class Snowboy {
   MethodChannel _channel = const MethodChannel('plugin_snowboy');
@@ -53,9 +52,8 @@ class Snowboy {
   // model and other resources, w. configuration. If no model path
   // is provided, defaults to loading a model that recognizes the
   // hotword "Alexa".
-  Future<bool> prepare(Function hwHandler,
-      {String modelPath = "",
-      double sensitivity = 0.5,
+  Future<bool> prepare(Function hwHandler, String modelPath,
+      {double sensitivity = 0.5,
       double audioGain = 1.0,
       bool applyFrontend = false}) async {
     hotwordHandler = hwHandler;
@@ -69,9 +67,9 @@ class Snowboy {
     }
   }
 
-  Future<void> detect() async {
+  Future<void> detect(Uint8List data) async {
     try {
-      await _channel.invokeMethod('detectSnowboy');
+      await _channel.invokeMethod('detectSnowboy', [data]);
     } on PlatformException catch (e) {
       _err("detectSnowboy", e.toString());
     }

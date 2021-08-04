@@ -53,8 +53,8 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       detector = Snowboy();
-      String modelPath = await copyModelToFilesystem("alexa.umdl");
-      await detector.prepare(hotwordHandler, modelPath: modelPath);
+      String modelPath = await copyModelToFilesystem("alexa.pmdl");
+      await detector.prepare(hotwordHandler, modelPath);
     } on PlatformException {}
   }
 
