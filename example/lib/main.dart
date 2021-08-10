@@ -19,6 +19,7 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data' show Uint8List;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -56,8 +57,9 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
   Future<void> initPlatformState() async {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      detector = Snowboy();
       String modelPath = await copyModelToFilesystem("alexa.pmdl");
+      // Create detector object and prepare it
+      detector = Snowboy();
       await detector.prepare(hotwordHandler, modelPath);
     } on PlatformException {}
   }
@@ -75,6 +77,7 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
     return finalPath;
   }
 
+  // Function to invoke when hotword is detected
   void hotwordHandler() {
     // Play sound
     Audio.load('assets/ding.wav')
@@ -87,19 +90,21 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
   }
 
   void startDetection() async {
+    // Prep recording session
     await _micRecorder.openAudioSession();
 
     // Create recording stream
     _recordingDataController = StreamController<Food>();
     _recordingDataSubscription = _recordingDataController.stream.listen((buffer) {
+      // When we get data, feed it into Snowboy detector
       if (buffer is FoodData) {
-        //_recognitionStream?.add(buffer.data);
-        //_updateAudioSignal(buffer.data);
-        //totalAudioDataSize += buffer.data.lengthInBytes;
-        print("Got data");
+        Uint8List copy = new Uint8List.fromList(buffer.data);
+        print("Got audio data (${buffer.data.lengthInBytes} bytes");
+        detector.detect(copy);
       }
     });
 
+    // Start recording
     await _micRecorder.startRecorder(
         toStream: _recordingDataController.sink,
         codec: Codec.pcm16,

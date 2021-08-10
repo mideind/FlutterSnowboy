@@ -49,9 +49,7 @@ class Snowboy {
   }
 
   // Instantiate Snowboy in the native plugin code, load provided
-  // model and other resources, w. configuration. If no model path
-  // is provided, defaults to loading a model that recognizes the
-  // hotword "Alexa".
+  // model and other resources, w. configuration.
   Future<bool> prepare(Function hwHandler, String modelPath,
       {double sensitivity = 0.5,
       double audioGain = 1.0,

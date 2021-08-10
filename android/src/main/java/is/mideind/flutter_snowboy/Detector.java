@@ -41,6 +41,7 @@ public class Detector {
     public Detector(Handler handler, String commonPath, String modelPath,
                     String sensitivity, double audioGain, boolean applyFrontend) {
         this.handler = handler;
+        // Create and configure SnowboyDetect object
         this.snowboy = new SnowboyDetect(commonPath, modelPath);
         this.snowboy.SetSensitivity(sensitivity);
         this.snowboy.SetAudioGain((float) audioGain);
@@ -48,12 +49,12 @@ public class Detector {
     }
 
     public void detect(byte[] audioBuffer) {
-        // Feed data into SnowboyDetect
-        // Snowboy hotword detection.
+        // Convert data to 16-bit shorts and feed into Snowboy detection fn
         short[] audioData = new short[audioBuffer.length / 2];
         ByteBuffer.wrap(audioBuffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(audioData);
         int result = this.snowboy.RunDetection(audioData, audioData.length);
 
+        // Process result from Snowboy detection fn
         if (result == -2) {
             // post a higher CPU usage:
             // sendMessage(MsgEnum.MSG_VAD_NOSPEECH, null);

@@ -103,7 +103,7 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
             double audioGain = (double) args.get(2);
             boolean applyFrontend = (boolean) args.get(3);
 
-            Detector detector = new Detector(handle, commonPath, modelPath,
+            detector = new Detector(handle, commonPath, modelPath,
                     sensitivity, audioGain, applyFrontend);
 
         } catch (Exception e) {
@@ -116,8 +116,10 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
 
     public void detectSnowboy(@NonNull MethodCall call, @NonNull Result result) {
         try {
+            // Retrieve first argument from Flutter
             ArrayList args = call.arguments();
             byte[] bytes = (byte[]) args.get(0);
+            // Feed bytes into detector
             detector.detect(bytes);
         } catch (Exception e) {
             e.printStackTrace();
