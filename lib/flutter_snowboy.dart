@@ -50,11 +50,10 @@ class Snowboy {
 
   // Instantiate Snowboy in the native plugin code, load provided
   // model and other resources, w. configuration.
-  Future<bool> prepare(Function hwHandler, String modelPath,
+  Future<bool> prepare(String modelPath,
       {double sensitivity = 0.5,
       double audioGain = 1.0,
       bool applyFrontend = false}) async {
-    hotwordHandler = hwHandler;
     try {
       final bool success = await _channel.invokeMethod(
           'prepareSnowboy', [modelPath, sensitivity, audioGain, applyFrontend]);

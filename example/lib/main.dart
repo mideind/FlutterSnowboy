@@ -60,7 +60,8 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
       String modelPath = await copyModelToFilesystem("alexa.pmdl");
       // Create detector object and prepare it
       detector = Snowboy();
-      await detector.prepare(hotwordHandler, modelPath);
+      await detector.prepare(modelPath);
+      detector.hotwordHandler = hotwordHandler;
     } on PlatformException {}
   }
 
