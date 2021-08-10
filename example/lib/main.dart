@@ -25,6 +25,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_snowboy/flutter_snowboy.dart';
 import 'package:audiofileplayer/audiofileplayer.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_sound_lite/flutter_sound.dart';
 
 void main() {
   runApp(SnowboyExampleApp());
@@ -41,6 +42,9 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
   String status = "Snowboy is not running";
   String buttonTitle = 'Start detection';
   Snowboy detector;
+  FlutterSoundRecorder _micRecorder = FlutterSoundRecorder();
+  StreamController _recordingDataController;
+  StreamSubscription _recordingDataSubscription;
 
   @override
   void initState() {
@@ -82,16 +86,47 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
     });
   }
 
+  void startDetection() async {
+    await _micRecorder.openAudioSession();
+
+    // Create recording stream
+    _recordingDataController = StreamController<Food>();
+    _recordingDataSubscription = _recordingDataController.stream.listen((buffer) {
+      if (buffer is FoodData) {
+        //_recognitionStream?.add(buffer.data);
+        //_updateAudioSignal(buffer.data);
+        //totalAudioDataSize += buffer.data.lengthInBytes;
+        print("Got data");
+      }
+    });
+
+    await _micRecorder.startRecorder(
+        toStream: _recordingDataController.sink,
+        codec: Codec.pcm16,
+        numChannels: 1,
+        sampleRate: 16000);
+  }
+
+  void stopDetection() async {
+    await _micRecorder?.stopRecorder();
+    await _micRecorder?.closeAudioSession();
+    await _recordingDataSubscription?.cancel();
+    await _recordingDataController?.close();
+  }
+
   void toggleHotwordDetection() {
     String s;
     String t;
     bool r;
 
     if (running == false) {
+      startDetection();
       s = "Snowboy is running";
       t = "Stop detection";
       r = true;
+
     } else {
+      stopDetection();
       s = "Snowboy is not running";
       t = "Start detection";
       r = false;
