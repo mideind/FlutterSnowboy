@@ -57,7 +57,7 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
   Future<void> initPlatformState() async {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      String modelPath = await copyModelToFilesystem("alexa.pmdl");
+      String modelPath = await copyModelToFilesystem("hi_embla.pmdl");
       // Create detector object and prepare it
       detector = Snowboy();
       await detector.prepare(modelPath);
@@ -100,7 +100,7 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
       // When we get data, feed it into Snowboy detector
       if (buffer is FoodData) {
         Uint8List copy = new Uint8List.fromList(buffer.data);
-        print("Got audio data (${buffer.data.lengthInBytes} bytes");
+        // print("Got audio data (${buffer.data.lengthInBytes} bytes");
         detector.detect(copy);
       }
     });
@@ -127,7 +127,7 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
 
     if (running == false) {
       startDetection();
-      s = "Snowboy is running";
+      s = "Snowboy is running\nSay 'Hi Embla' to trigger hotword handler.";
       t = "Stop detection";
       r = true;
 
