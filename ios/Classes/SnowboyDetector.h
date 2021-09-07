@@ -28,5 +28,6 @@ typedef void(^SnowboyDetectorBlock)(void);
   applyFrontend:(BOOL)applyFrontend;
 - (void)detect:(NSData *)audioData;
 - (void)purge;
+- (BOOL)inited;
 
 @end

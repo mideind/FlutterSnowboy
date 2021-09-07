@@ -18,12 +18,10 @@
 #import "SnowboyDetector.h"
 #import <Snowboy/Snowboy.h>
 
-
 @interface SnowboyDetector()
 {
     snowboy::SnowboyDetect* _snowboyDetect;
 }
-@property BOOL inited;
 @property (nonatomic, copy) SnowboyDetectorBlock detectionBlock;
 @end
 
@@ -41,31 +39,28 @@
     sensitivity:(double)sensitivity
       audioGain:(double)audioGain
   applyFrontend:(BOOL)applyFrontend {
-
-    if (!self.inited) {
-        NSLog(@"Initing Snowboy hotword detector");
-        _snowboyDetect = NULL;
-
-        NSString *commonPath = [[NSBundle mainBundle] pathForResource:@"common" ofType:@"res"];
-        if (![[NSFileManager defaultManager] fileExistsAtPath:commonPath]) {
-            NSLog(@"Unable to init Snowboy, bundled common.res missing");
-            return FALSE;
-        }
-        if (![[NSFileManager defaultManager] fileExistsAtPath:modelPath]) {
-            NSLog(@"Unable to init Snowboy, no file at model path %@", modelPath);
-            return FALSE;
-        }
-
-        // Create and configure Snowboy C++ detector object
-        _snowboyDetect = new snowboy::SnowboyDetect(std::string([commonPath UTF8String]),
-                                                    std::string([modelPath UTF8String]));
-        NSString *ssString = [NSString stringWithFormat:@"%f", sensitivity];
-        _snowboyDetect->SetSensitivity([ssString cStringUsingEncoding:NSUTF8StringEncoding]);
-        _snowboyDetect->SetAudioGain(audioGain);
-        _snowboyDetect->ApplyFrontend(applyFrontend);
-
-        self.inited = TRUE;
+    
+    NSLog(@"Initing Snowboy hotword detector");
+    _snowboyDetect = NULL;
+    
+    NSString *commonPath = [[NSBundle mainBundle] pathForResource:@"common" ofType:@"res"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:commonPath]) {
+        NSLog(@"Unable to init Snowboy, bundled common.res missing");
+        return FALSE;
     }
+    if (![[NSFileManager defaultManager] fileExistsAtPath:modelPath]) {
+        NSLog(@"Unable to init Snowboy, no file at model path %@", modelPath);
+        return FALSE;
+    }
+    
+    // Create and configure Snowboy C++ detector object
+    _snowboyDetect = new snowboy::SnowboyDetect(std::string([commonPath UTF8String]),
+                                                std::string([modelPath UTF8String]));
+    NSString *ssString = [NSString stringWithFormat:@"%f", sensitivity];
+    _snowboyDetect->SetSensitivity([ssString cStringUsingEncoding:NSUTF8StringEncoding]);
+    _snowboyDetect->SetAudioGain(audioGain);
+    _snowboyDetect->ApplyFrontend(applyFrontend);
+    
     return TRUE;
 }
 
@@ -81,6 +76,10 @@
             }
         }
     });
+}
+
+- (BOOL)inited {
+    return (_snowboyDetect != NULL);
 }
 
 @end

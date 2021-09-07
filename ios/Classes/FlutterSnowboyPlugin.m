@@ -19,14 +19,11 @@
 #import "SnowboyDetector.h"
 
 // Snowboy default configuration
-#define SNOWBOY_DEFAULT_SENSITIVITY     "0.5"
-#define SNOWBOY_DEFAULT_AUDIO_GAIN      1.0
-#define SNOWBOY_DEFAULT_APPLY_FRONTEND  FALSE  // Should be false for pmdl, true for umdl
-
+#define SNOWBOY_DEFAULT_SENSITIVITY         0.5
+#define SNOWBOY_DEFAULT_AUDIO_GAIN          1.0
+#define SNOWBOY_DEFAULT_APPLY_FRONTEND      FALSE  // Should be false for pmdl, true for umdl
 
 @implementation FlutterSnowboyPlugin
-{
-}
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
     FlutterMethodChannel *channel = [FlutterMethodChannel methodChannelWithName:@"plugin_snowboy"
@@ -48,11 +45,34 @@
 }
 
 - (BOOL)prepareSnowboy:(FlutterMethodCall *)call result:(FlutterResult)result {
+    // Validate all arguments
+    
+    // Model path
     NSString *modelPath = [call.arguments objectAtIndex:0];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:modelPath] == FALSE) {
+        NSLog(@"No Snowboy model found at path %@", modelPath);
+        return FALSE
+    }
+    
+    // Sensitivity
     NSNumber *sensitivity = [call.arguments objectAtIndex:1];
+    if (sensitivity == nil) {
+        sensitivity = [NSNumber numberWithDouble:SNOWBOY_DEFAULT_SENSITIVITY];
+    }
+    
+    // Audio gain
     NSNumber *audioGain = [call.arguments objectAtIndex:2];
+    if (audioGain == nil) {
+        audioGain = [NSNumber numberWithDouble:SNOWBOY_DEFAULT_AUDIO_GAIN];
+    }
+    
+    // Frontend processing
     NSNumber *applyFrontend = [call.arguments objectAtIndex:3];
+    if (applyFrontend == nil) {
+        audioGain = [NSNumber numberWithBool:SNOWBOY_DEFAULT_APPLY_FRONTEND];
+    }
 
+    // Initialize detector instance
     return [[SnowboyDetector sharedInstance] prepare:modelPath
                                          sensitivity:[sensitivity doubleValue]
                                            audioGain:[audioGain doubleValue]
@@ -62,10 +82,16 @@
 - (void)detectSnowboy:(FlutterMethodCall *)call result:(FlutterResult)result {
     NSArray *args = call.arguments;
     FlutterStandardTypedData *typedData = [args objectAtIndex:0];
-    [[SnowboyDetector sharedInstance] detect:[typedData data]];
+    NSData *audioData = [typedData data];
+    if ([[SnowboyDetector sharedInstance] inited] == FALSE) {
+        NSLog(@"Attempt to run detector on data prior to initialization!");
+        return;
+    }
+    [[SnowboyDetector sharedInstance] detect:data];
 }
 
 - (void)purgeSnowboy:(FlutterMethodCall *)call result:(FlutterResult)result {
+    [[SnowboyDetector sharedInstance] purge];
 }
 
 @end
