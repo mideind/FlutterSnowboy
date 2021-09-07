@@ -129,6 +129,7 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     public void purgeSnowboy(@NonNull MethodCall call, @NonNull Result result) {
+        detector = null;
         result.success(null);
     }
 

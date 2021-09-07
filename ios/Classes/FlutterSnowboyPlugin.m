@@ -18,6 +18,12 @@
 #import "FlutterSnowboyPlugin.h"
 #import "SnowboyDetector.h"
 
+// Snowboy default configuration
+#define SNOWBOY_DEFAULT_SENSITIVITY     "0.5"
+#define SNOWBOY_DEFAULT_AUDIO_GAIN      1.0
+#define SNOWBOY_DEFAULT_APPLY_FRONTEND  false  // Should be false for pmdl, true for umdl
+
+
 @implementation FlutterSnowboyPlugin
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
@@ -29,41 +35,36 @@
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
     if ([call.method isEqualToString:@"prepareSnowboy"]) {
-        // TODO: Pass params to prepare: function
-        // [self prepare:modelName sensitivity:sensitivity audioGain:audioGain applyFrontend:applyFrontend]
-        result(NULL);
-    } else if ([call.method isEqualToString:@"startSnowboy"]) {
-        result([self start]);
-    } else if ([call.method isEqualToString:@"stopSnowboy"]) {
-        result([self stop]);
+        [self prepareSnowboy:call result:result];
+    } else if ([call.method isEqualToString:@"detectSnowboy"]) {
+        [self detectSnowboy:call result:result];
     } else if ([call.method isEqualToString:@"purgeSnowboy"]) {
-        result([self purge]);
-    } else if ([call.method isEqualToString:@"getSnowboyState"]) {
-        result([self state]);
+        [self purgeSnowboy:call result:result];
     } else {
         result(FlutterMethodNotImplemented);
     }
 }
 
-- (BOOL)prepare:(NSString *)modelName sensitivity:(NSNumber *)sensitivity
-audioGain:(NSNumber *)audioGain applyFrontend:(BOOL)applyFrontend {
-    [[SnowboyDetector sharedInstance] setUpDetector];
+- (BOOL)prepareSnowboy:(FlutterMethodCall *)call result:(FlutterResult)result {
+    NSString *modelPath = call.arguments[@"modelPath"];
+    NSNumber *sensitivity = call.arguments[@"sensitivity"];
+    NSNumber *audioGain = call.arguments[@"audioGain"];
+    NSNumber *applyFrontend = call.arguments[@"applyFrontend"];
+
+    return [[SnowboyDetector sharedInstance] prepare:modelPath
+                                         sensitivity:[sensitivity doubleValue]
+                                           audioGain:[audioGain doubleValue]
+                                       applyFrontend:[applyFrontend boolValue]];
 }
 
-- (void)start:(void (^nullability)(void))hotwordHandler {
-    [[SnowboyDetector sharedInstance] startListening];
+- (BOOL)detectSnowboy:(FlutterMethodCall *)call result:(FlutterResult)result {
+    NSArray *args = call.arguments;
+    FlutterStandardTypedData *data = [args objectAtIndex:0];
+    return YES;
 }
 
-- (void)stop {
-    [[SnowboyDetector sharedInstance] stopListening];
-}
-
-- (void)purge {
-    [[SnowboyDetector sharedInstance] purge];
-}
-
-- (int)state {
-    return [[SnowboyDetector sharedInstance] state];
+- (BOOL)purgeSnowboy:(FlutterMethodCall *)call result:(FlutterResult)result {
+    return YES;
 }
 
 @end

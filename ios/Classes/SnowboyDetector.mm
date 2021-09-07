@@ -15,24 +15,14 @@
  *
  */
 
-#import "Common.h"
 #import "SnowboyDetector.h"
 #import <Snowboy/Snowboy.h>
-
-// Snowboy detector configuration
-#define SNOWBOY_MODEL_NAME      @"hae_embla"
-#define SNOWBOY_SENSITIVITY     "0.5"
-#define SNOWBOY_AUDIO_GAIN      1.0
-#define SNOWBOY_APPLY_FRONTEND  false  // Should be false for pmdl, true for umdl
 
 @interface SnowboyDetector()
 {
     snowboy::SnowboyDetect* _snowboyDetect;
 }
-@property (weak) id <HotwordDetectorDelegate>delegate;
-@property (readonly) BOOL isListening;
 @property BOOL inited;
-
 @end
 
 @implementation SnowboyDetector
@@ -45,58 +35,36 @@
     return instance;
 }
 
-- (BOOL)setUpDetector {
+- (BOOL)prepare:(NSString *)modelPath
+    sensitivity:(double)sensitivity
+      audioGain:(double)audioGain
+  applyFrontend:(BOOL)applyFrontend {
+
     if (!self.inited) {
-        DLog(@"Initing Snowboy hotword detector");
+        NSLog(@"Initing Snowboy hotword detector");
         _snowboyDetect = NULL;
 
         NSString *commonPath = [[NSBundle mainBundle] pathForResource:@"common" ofType:@"res"];
-        NSString *modelPath = [[NSBundle mainBundle] pathForResource:SNOWBOY_MODEL_NAME ofType:@"umdl"];
-        if (![[NSFileManager defaultManager] fileExistsAtPath:commonPath] ||
-            ![[NSFileManager defaultManager] fileExistsAtPath:modelPath]) {
-            DLog(@"Unable to init Snowboy, bundle resources missing");
+        if (![[NSFileManager defaultManager] fileExistsAtPath:commonPath]) {
+            NSLog(@"Unable to init Snowboy, bundled common.res missing");
+            return FALSE;
+        }
+        if (![[NSFileManager defaultManager] fileExistsAtPath:modelPath]) {
+            NSLog(@"Unable to init Snowboy, no file at model path %@", modelPath);
             return FALSE;
         }
 
         // Create and configure Snowboy C++ detector object
         _snowboyDetect = new snowboy::SnowboyDetect(std::string([commonPath UTF8String]),
                                                     std::string([modelPath UTF8String]));
-        _snowboyDetect->SetSensitivity(SNOWBOY_SENSITIVITY);
-        _snowboyDetect->SetAudioGain(SNOWBOY_AUDIO_GAIN);
-        _snowboyDetect->ApplyFrontend(SNOWBOY_APPLY_FRONTEND);
+        NSString *ssString = [NSString stringWithFormat:@"%f", sensitivity];
+        _snowboyDetect->SetSensitivity([ssString cStringUsingEncoding:NSUTF8StringEncoding]);
+        _snowboyDetect->SetAudioGain(audioGain);
+        _snowboyDetect->ApplyFrontend(applyFrontend);
 
-        [[AudioRecordingService sharedInstance] prepare];
-
-        // Start listening
         self.inited = TRUE;
     }
     return TRUE;
-}
-
-- (BOOL)startListening {
-    [self setUpDetector];
-    [self _startListening];
-    _isListening = TRUE;
-    return TRUE;
-}
-
-- (void)_startListening {
-    [[AudioRecordingService sharedInstance] setDelegate:self];
-    [[AudioRecordingService sharedInstance] start];
-}
-
-- (void)stopListening {
-    [[AudioRecordingService sharedInstance] stop];
-    _isListening = FALSE;
-}
-
-- (void)purge {
-    delete _snowboyDetect;
-    self.inited = FALSE;
-}
-
-- (int)state {
-    return 0;
 }
 
 - (void)processSampleData:(NSData *)data {
@@ -105,10 +73,7 @@
         const int len = (int)[data length]/2; // 16-bit audio
         int result = _snowboyDetect->RunDetection((const int16_t *)bytes, len);
         if (result == 1) {
-            DLog(@"Snowboy: Hotword detected");
-            if (self.delegate) {
-                [self.delegate didHearHotword:SNOWBOY_MODEL_NAME];
-            }
+            NSLog(@"Snowboy: Hotword detected");
         }
     });
 }

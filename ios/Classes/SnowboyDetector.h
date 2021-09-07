@@ -16,13 +16,15 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AudioRecordingService.h"
-#import "HotwordDetector.h"
 
-@interface SnowboyDetector : NSObject <HotwordDetector, AudioRecordingServiceDelegate>
+@interface SnowboyDetector : NSObject
 
-- (BOOL)setUpDetector;
++ (instancetype)sharedInstance;
+- (BOOL)prepare:(NSString *)modelPath
+    sensitivity:(double)sensitivity
+      audioGain:(double)audioGain
+  applyFrontend:(BOOL)applyFrontend;
+- (void)detect;
 - (void)purge;
-- (int)state;
 
 @end
