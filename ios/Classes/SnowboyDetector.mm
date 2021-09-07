@@ -18,11 +18,13 @@
 #import "SnowboyDetector.h"
 #import <Snowboy/Snowboy.h>
 
+
 @interface SnowboyDetector()
 {
     snowboy::SnowboyDetect* _snowboyDetect;
 }
 @property BOOL inited;
+@property (nonatomic, copy) SnowboyDetectorBlock detectionBlock;
 @end
 
 @implementation SnowboyDetector
@@ -67,13 +69,16 @@
     return TRUE;
 }
 
-- (void)processSampleData:(NSData *)data {
+- (void)detect:(NSData *)audioData {
     dispatch_async(dispatch_get_main_queue(),^{
-        const int16_t *bytes = (int16_t *)[data bytes];
-        const int len = (int)[data length]/2; // 16-bit audio
+        const int16_t *bytes = (int16_t *)[audioData bytes];
+        const int len = (int)[audioData length]/2; // 16-bit audio
         int result = _snowboyDetect->RunDetection((const int16_t *)bytes, len);
         if (result == 1) {
             NSLog(@"Snowboy: Hotword detected");
+            if (_detectionBlock != nil) {
+                _detectionBlock();
+            }
         }
     });
 }

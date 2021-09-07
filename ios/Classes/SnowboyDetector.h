@@ -17,6 +17,8 @@
 
 #import <Foundation/Foundation.h>
 
+typedef void(^SnowboyDetectorBlock)(void);
+
 @interface SnowboyDetector : NSObject
 
 + (instancetype)sharedInstance;
@@ -24,7 +26,7 @@
     sensitivity:(double)sensitivity
       audioGain:(double)audioGain
   applyFrontend:(BOOL)applyFrontend;
-- (void)detect;
+- (void)detect:(NSData *)audioData;
 - (void)purge;
 
 @end
