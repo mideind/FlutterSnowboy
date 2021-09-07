@@ -1,4 +1,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Language](https://img.shields.io/badge/language-dart-lightblue)]()
+[![Language](https://img.shields.io/badge/language-objective--c-lightgrey)]()
+[![Language](https://img.shields.io/badge/language-java-lightgreen)]()
 [![Build](https://github.com/mideind/flutter_snowboy/actions/workflows/main.yml/badge.svg)]()
 
 # Flutter Snowboy plugin
@@ -9,7 +12,7 @@ This repository contains the source code to a Flutter Snowboy package.
 [Snowboy](https://github.com/seasalt-ai/snowboy) is a cross-platform
 DNN-based hotword detection toolkit.
 
-The plugin currently only supports Android but iOS support is under way.
+The plugin currently supports the Android and iOS platforms.
 
 ## Models
 
