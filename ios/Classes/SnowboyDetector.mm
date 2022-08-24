@@ -17,12 +17,13 @@
 
 #import "SnowboyDetector.h"
 #import <Snowboy/Snowboy.h>
+#import <Flutter/Flutter.h>
+
 
 @interface SnowboyDetector()
 {
     snowboy::SnowboyDetect* _snowboyDetect;
 }
-@property (nonatomic, copy) SnowboyDetectorBlock detectionBlock;
 @end
 
 @implementation SnowboyDetector
@@ -64,16 +65,14 @@
     return TRUE;
 }
 
-- (void)detect:(NSData *)audioData {
+- (void)detect:(NSData *)audioData channel:(FlutterMethodChannel *)channel {
+    const int16_t *bytes = (int16_t *)[audioData bytes];
+    const int len = (int)[audioData length]/2; // 16-bit audio
+    int result = _snowboyDetect->RunDetection((const int16_t *)bytes, len);
     dispatch_async(dispatch_get_main_queue(),^{
-        const int16_t *bytes = (int16_t *)[audioData bytes];
-        const int len = (int)[audioData length]/2; // 16-bit audio
-        int result = _snowboyDetect->RunDetection((const int16_t *)bytes, len);
         if (result == 1) {
-            NSLog(@"Snowboy: Hotword detected");
-            if (_detectionBlock != nil) {
-                _detectionBlock();
-            }
+            //NSLog(@"Snowboy: Hotword detected");
+            [channel invokeMethod:@"hotword" arguments:nil];
         }
     });
 }

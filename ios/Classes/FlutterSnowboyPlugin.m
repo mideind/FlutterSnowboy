@@ -23,12 +23,18 @@
 #define SNOWBOY_DEFAULT_AUDIO_GAIN          1.0
 #define SNOWBOY_DEFAULT_APPLY_FRONTEND      FALSE  // Should be false for pmdl, true for umdl
 
+@interface FlutterSnowboyPlugin()
+@property (nonatomic, retain) FlutterMethodChannel *channel;
+@end
+
+
 @implementation FlutterSnowboyPlugin
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
     FlutterMethodChannel *channel = [FlutterMethodChannel methodChannelWithName:@"plugin_snowboy"
                                           binaryMessenger:[registrar messenger]];
     FlutterSnowboyPlugin *instance = [FlutterSnowboyPlugin new];
+    instance.channel = channel;
     [registrar addMethodCallDelegate:instance channel:channel];
 }
 
@@ -87,7 +93,7 @@
         NSLog(@"Attempt to run detector on data prior to initialization!");
         return;
     }
-    [[SnowboyDetector sharedInstance] detect:audioData];
+    [[SnowboyDetector sharedInstance] detect:audioData channel:self.channel];
 }
 
 - (void)purgeSnowboy:(FlutterMethodCall *)call result:(FlutterResult)result {

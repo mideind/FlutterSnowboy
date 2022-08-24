@@ -16,17 +16,18 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <Flutter/Flutter.h>
 
-typedef void(^SnowboyDetectorBlock)(void);
+typedef void (^SnowboyDetectorBlock)(void);
 
 @interface SnowboyDetector : NSObject
 
 + (instancetype)sharedInstance;
 - (BOOL)prepare:(NSString *)modelPath
-    sensitivity:(double)sensitivity
-      audioGain:(double)audioGain
-  applyFrontend:(BOOL)applyFrontend;
-- (void)detect:(NSData *)audioData;
+      sensitivity:(double)sensitivity
+        audioGain:(double)audioGain
+    applyFrontend:(BOOL)applyFrontend;
+- (void)detect:(NSData *)audioData channel:(FlutterMethodChannel *)channel;
 - (void)purge;
 - (BOOL)inited;
 
