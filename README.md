@@ -6,13 +6,11 @@
 
 # Flutter Snowboy plugin
 
-*This is __alpha__ quality software. Caveat emptor!*
-
 This repository contains the source code to a Flutter Snowboy package.
 [Snowboy](https://github.com/seasalt-ai/snowboy) is a cross-platform
 DNN-based hotword detection toolkit.
 
-The plugin currently supports the Android and iOS platforms.
+The plugin currently only supports the Android and iOS platforms.
 
 ## Models
 
@@ -61,7 +59,7 @@ fork this repository and open pull requests to your heart's content.
 
 ## License
 
-flutter_snowboy is Copyright (C) 2021 [Miðeind ehf.](https://mideind.is)  
+flutter_snowboy is Copyright (C) 2021-2022 [Miðeind ehf.](https://mideind.is)  
 Snowboy is Copyright (C) 2016-2020 KITT.AI
 
 Licensed under the Apache License, Version 2.0 (the "License");
