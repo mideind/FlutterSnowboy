@@ -51,7 +51,7 @@
     NSString *modelPath = [call.arguments objectAtIndex:0];
     if ([[NSFileManager defaultManager] fileExistsAtPath:modelPath] == FALSE) {
         NSLog(@"No Snowboy model found at path %@", modelPath);
-        return FALSE
+        return FALSE;
     }
     
     // Sensitivity
@@ -87,7 +87,7 @@
         NSLog(@"Attempt to run detector on data prior to initialization!");
         return;
     }
-    [[SnowboyDetector sharedInstance] detect:data];
+    [[SnowboyDetector sharedInstance] detect:audioData];
 }
 
 - (void)purgeSnowboy:(FlutterMethodCall *)call result:(FlutterResult)result {

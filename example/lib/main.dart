@@ -130,7 +130,6 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
       s = "Snowboy is running\nSay 'Hi Embla' to trigger hotword handler.";
       t = "Stop detection";
       r = true;
-
     } else {
       stopDetection();
       s = "Snowboy is not running";

@@ -7,15 +7,15 @@ version: 0.0.1+1
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.7.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  audiofileplayer: '>=2.0.0'
-  path_provider: '>=2.0.0'
-  flutter_sound_lite: '>=8.3.9'
+  audiofileplayer: '>=2.1.0'
+  path_provider: '>=2.0.11'
+  flutter_sound_lite: '>=8.5.0'
 
   flutter_snowboy:
     # When depending on this package from a real application you should use:
