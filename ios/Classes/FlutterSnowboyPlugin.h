@@ -17,5 +17,5 @@
 
 #import <Flutter/Flutter.h>
 
-@interface FlutterSnowboyPlugin : NSObject<FlutterPlugin>
+@interface FlutterSnowboyPlugin : NSObject <FlutterPlugin>
 @end
