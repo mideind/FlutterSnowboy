@@ -1,12 +1,12 @@
 /*
- * Copyright -2022 Miðeind ehf.
- * 
+ * Copyright 2021-2022 Miðeind ehf.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,10 +23,12 @@ import 'dart:typed_data' show Uint8List;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_snowboy/flutter_snowboy.dart';
+
 import 'package:audiofileplayer/audiofileplayer.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
+
+import 'package:flutter_snowboy/flutter_snowboy.dart';
 
 void main() {
   runApp(SnowboyExampleApp());
@@ -42,7 +44,9 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
   int numDetected = 0;
   String status = "Snowboy is not running";
   String buttonTitle = 'Start detection';
+
   Snowboy detector;
+
   FlutterSoundRecorder _micRecorder = FlutterSoundRecorder();
   StreamController _recordingDataController;
   StreamSubscription _recordingDataSubscription;
@@ -70,6 +74,7 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
     String dir = (await getTemporaryDirectory()).path;
     String finalPath = "$dir/$filename";
     if (await File(finalPath).exists() == true) {
+      // Don't overwrite existing file
       return finalPath;
     }
     ByteData bytes = await rootBundle.load("assets/$filename");
@@ -80,14 +85,14 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
 
   // Function to invoke when hotword is detected
   void hotwordHandler() {
-    // Play sound
-    Audio.load('assets/ding.wav')
-      ..play()
-      ..dispose();
     // Increment counter
     setState(() {
       numDetected += 1;
     });
+    // Play sound
+    Audio.load('assets/ding.wav')
+      ..play()
+      ..dispose();
   }
 
   void startDetection() async {
@@ -148,7 +153,7 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Flutter Snowboy example app'),
+          title: const Text('Flutter Snowboy example'),
         ),
         body: Center(
           child: Column(children: <Widget>[

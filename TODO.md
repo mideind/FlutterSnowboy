@@ -1,7 +1,6 @@
 # TODO for flutter_snowboy
 
-* Result.error invoc instead of result.success when exception occurs
-* Graceful error handling, more input sanity checks in Java implementation
+* Graceful error handling and more input sanity checks in Java & Obj-C implementations
 
 ## Long-term
 

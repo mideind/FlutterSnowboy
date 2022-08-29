@@ -1,6 +1,6 @@
 name: flutter_snowboy
 description: Flutter plugin for Snowboy hotword detection
-version: 0.1.0+1
+version: 0.1.1+1
 homepage: https://github.com/mideind/flutter_snowboy
 
 environment:
@@ -14,7 +14,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  test: ^1.16.5
+  test: ">=1.20.0"
 
 flutter:
   plugin:
