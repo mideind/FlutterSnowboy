@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Miðeind ehf.
+ * Copyright (C) 2021-2022 Miðeind ehf.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-
 public class Detector {
     // Load compiled Snowboy shared object
     static {
@@ -39,17 +38,19 @@ public class Detector {
     private final SnowboyDetect snowboy;
 
     public Detector(Handler handler, String commonPath, String modelPath,
-                    String sensitivity, double audioGain, boolean applyFrontend) {
-        this.handler = handler;
+            String sensitivity, double audioGain, boolean applyFrontend) {
+
         // Create and configure SnowboyDetect object
         this.snowboy = new SnowboyDetect(commonPath, modelPath);
         this.snowboy.SetSensitivity(sensitivity);
         this.snowboy.SetAudioGain((float) audioGain);
         this.snowboy.ApplyFrontend(applyFrontend);
+
+        this.handler = handler;
     }
 
     public void detect(byte[] audioBuffer) {
-        // Convert data to 16-bit shorts and feed into Snowboy detection fn
+        // Convert data to 16-bit shorts and feed into Snowboy detection function
         short[] audioData = new short[audioBuffer.length / 2];
         ByteBuffer.wrap(audioBuffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(audioData);
         int result = this.snowboy.RunDetection(audioData, audioData.length);
@@ -65,12 +66,12 @@ public class Detector {
             // sendMessage(MsgEnum.MSG_VAD_SPEECH, null);
         } else if (result > 0) {
             sendMessage(MsgEnum.MSG_ACTIVE, null);
-            Log.i("Snowboy: ", "Hotword " + Integer.toString(result) + " detected!");
+            // Log.i("Snowboy: ", "Hotword " + Integer.toString(result) + " detected!");
         }
     }
 
     private void sendMessage(MsgEnum what, Object obj) {
-        if (null != handler) {
+        if (handler != null) {
             Message msg = handler.obtainMessage(what.ordinal(), obj);
             handler.sendMessage(msg);
         }

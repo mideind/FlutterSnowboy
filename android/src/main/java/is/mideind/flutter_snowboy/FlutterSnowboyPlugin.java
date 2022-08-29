@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Miðeind ehf.
+ * Copyright (C) 2021-2022 Miðeind ehf.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,9 +40,10 @@ import ai.kitt.snowboy.AppResCopy;
 import is.mideind.flutter_snowboy.Detector;
 
 public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
-    // The MethodChannel that handles communication between Flutter and native Android
-    // This local reference serves to register the plugin with the Flutter Engine and unregister it
-    // when the Flutter Engine is detached from the Activity
+    // The MethodChannel that handles communication between Flutter and native
+    // Android. This local reference serves to register the plugin with the Flutter
+    // Engine and unregister it when the Flutter Engine is detached from the
+    // Activity.
     private MethodChannel channel;
 
     private Context context;
@@ -52,9 +53,10 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
     public Handler handle = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            System.err.println("Handler invoked!");
+            // System.err.println("Handler invoked!");
 
             channel.invokeMethod("hotword", null, new Result() {
+                // Boilerplate
                 @Override
                 public void success(Object o) {
                 }
@@ -71,11 +73,11 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
     };
 
     public void prepareSnowboy(@NonNull MethodCall call, @NonNull Result result) {
+        // Copy assets required by Snowboy to filesystem
         String rsrcPath = context.getFilesDir().getAbsolutePath() + "/" + Constants.ASSETS_DIRNAME;
         String commonPath = rsrcPath + "/" + Constants.COMMON_RES_FILENAME;
 
         try {
-            // Copy assets required by Snowboy to filesystem
             AppResCopy.copyFilesFromAssets(context, Constants.ASSETS_DIRNAME, rsrcPath, true);
 
             ArrayList args = call.arguments();
@@ -116,7 +118,7 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
 
     public void detectSnowboy(@NonNull MethodCall call, @NonNull Result result) {
         try {
-            // Retrieve first argument from Flutter
+            // Retrieve first argument from Flutter. This should be audio data.
             ArrayList args = call.arguments();
             byte[] bytes = (byte[]) args.get(0);
             // Feed bytes into detector
@@ -129,12 +131,14 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     public void purgeSnowboy(@NonNull MethodCall call, @NonNull Result result) {
+        // Dispose of any resources used by detector.
         detector = null;
         result.success(null);
     }
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
+        // Called when the Flutter plugin is attached to the Flutter Engine.
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "plugin_snowboy");
         channel.setMethodCallHandler(this);
         context = flutterPluginBinding.getApplicationContext();
@@ -147,6 +151,7 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
+        // Forward Flutter method calls to native code
         if (call.method.equals("prepareSnowboy")) {
             prepareSnowboy(call, result);
         } else if (call.method.equals("detectSnowboy")) {

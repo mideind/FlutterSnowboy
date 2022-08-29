@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Miðeind ehf.
+ * Copyright (C) 2021-2022 Miðeind ehf.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 #import "FlutterSnowboyPlugin.h"
 #import "SnowboyDetector.h"
 
-// Snowboy default configuration
+// Snowboy configuration defaults 
 #define SNOWBOY_DEFAULT_SENSITIVITY         0.5
 #define SNOWBOY_DEFAULT_AUDIO_GAIN          1.0
 #define SNOWBOY_DEFAULT_APPLY_FRONTEND      FALSE  // Should be false for pmdl, true for umdl
@@ -27,18 +27,20 @@
 @property (nonatomic, retain) FlutterMethodChannel *channel;
 @end
 
-
 @implementation FlutterSnowboyPlugin
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+    // Create a channel to communicate with the Flutter app
     FlutterMethodChannel *channel = [FlutterMethodChannel methodChannelWithName:@"plugin_snowboy"
-                                          binaryMessenger:[registrar messenger]];
+                                                                binaryMessenger:[registrar messenger]];
+    // Create an instance of the plugin and register it with the channel
     FlutterSnowboyPlugin *instance = [FlutterSnowboyPlugin new];
     instance.channel = channel;
     [registrar addMethodCallDelegate:instance channel:channel];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
+    // Method call handler for Flutter channel
     if ([call.method isEqualToString:@"prepareSnowboy"]) {
         result([NSNumber numberWithBool:[self prepareSnowboy:call result:result]]);
     } else if ([call.method isEqualToString:@"detectSnowboy"]) {
@@ -51,7 +53,8 @@
 }
 
 - (BOOL)prepareSnowboy:(FlutterMethodCall *)call result:(FlutterResult)result {
-    // Validate all arguments
+    
+    // First, validate all arguments
     
     // Model path
     NSString *modelPath = [call.arguments objectAtIndex:0];
@@ -72,7 +75,7 @@
         audioGain = [NSNumber numberWithDouble:SNOWBOY_DEFAULT_AUDIO_GAIN];
     }
     
-    // Frontend processing
+    // Frontend processing (should only be enabled for umdl models)
     NSNumber *applyFrontend = [call.arguments objectAtIndex:3];
     if (applyFrontend == nil) {
         audioGain = [NSNumber numberWithBool:SNOWBOY_DEFAULT_APPLY_FRONTEND];
@@ -86,17 +89,21 @@
 }
 
 - (void)detectSnowboy:(FlutterMethodCall *)call result:(FlutterResult)result {
-    NSArray *args = call.arguments;
-    FlutterStandardTypedData *typedData = [args objectAtIndex:0];
-    NSData *audioData = [typedData data];
+    // Make sure detector is initialized
     if ([[SnowboyDetector sharedInstance] inited] == FALSE) {
         NSLog(@"Attempt to run detector on data prior to initialization!");
         return;
     }
+
+    // Pass arguments to SnowboyDetector instance
+    NSArray *args = call.arguments;
+    FlutterStandardTypedData *typedData = [args objectAtIndex:0];
+    NSData *audioData = [typedData data];
     [[SnowboyDetector sharedInstance] detect:audioData channel:self.channel];
 }
 
 - (void)purgeSnowboy:(FlutterMethodCall *)call result:(FlutterResult)result {
+    // Release all resources used by detector
     [[SnowboyDetector sharedInstance] purge];
 }
 

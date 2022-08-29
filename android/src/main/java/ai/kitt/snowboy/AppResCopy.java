@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2016-2020 KITT.AI
- * Modifications were made by Miðeind ehf. Copyright (C) 2021
+ * Modifications were made by Miðeind ehf. Copyright (C) 2021-2022
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,8 @@ import java.io.InputStream;
 public class AppResCopy {
     private final static String TAG = AppResCopy.class.getSimpleName();
 
-    public static void copyFilesFromAssets(Context context, String assetsSrcDir, String sdcardDstDir, boolean override) {
+    public static void copyFilesFromAssets(Context context, String assetsSrcDir, String sdcardDstDir,
+            boolean override) {
         try {
             String fileNames[] = context.getAssets().list(assetsSrcDir);
             Log.e(TAG, "fileNames.toString()");
@@ -46,7 +47,8 @@ public class AppResCopy {
                     Log.w(TAG, sdcardDstDir + " already exists! ");
                 }
                 for (String fileName : fileNames) {
-                    copyFilesFromAssets(context, assetsSrcDir + "/" + fileName, sdcardDstDir + "/" + fileName, override);
+                    copyFilesFromAssets(context, assetsSrcDir + "/" + fileName, sdcardDstDir + "/" + fileName,
+                            override);
                 }
             } else {
                 Log.i(TAG, assetsSrcDir + " is file\n");

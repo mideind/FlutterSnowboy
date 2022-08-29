@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Miðeind ehf.
+ * Copyright (C) 2021-2022 Miðeind ehf.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ typedef void (^SnowboyDetectorBlock)(void);
 
 + (instancetype)sharedInstance;
 - (BOOL)prepare:(NSString *)modelPath
-      sensitivity:(double)sensitivity
-        audioGain:(double)audioGain
-    applyFrontend:(BOOL)applyFrontend;
+    sensitivity:(double)sensitivity
+      audioGain:(double)audioGain
+  applyFrontend:(BOOL)applyFrontend;
 - (void)detect:(NSData *)audioData channel:(FlutterMethodChannel *)channel;
 - (void)purge;
 - (BOOL)inited;
