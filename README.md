@@ -8,7 +8,7 @@
 
 *This is alpha quality software. Caveat emptor!*
 
-This repository contains the source code to a Flutter Snowboy package.
+This repository contains the source code to the Flutter Snowboy package.
 [Snowboy](https://github.com/seasalt-ai/snowboy) is a cross-platform
 DNN-based hotword detection toolkit.
 
@@ -22,7 +22,15 @@ follow the instructions.
 
 ## How to use
 
-### Initialize
+### Add dependency to project
+
+Add this to the dependencies list in your `pubspec.yaml` file:
+
+```yaml
+  flutter_snowboy: ">=0.1.0"
+```
+
+### Initialize detector
 
 ```dart
 import 'package:flutter_snowboy/flutter_snowboy.dart';
@@ -47,7 +55,7 @@ void hwHandler() {
 
 detector.hotwordHandler = hwHandler;
 
-// ... get audio data as UInt8List
+// ... get audio data as UInt8List and feed into detection function.
 
 detector.detect(data);
 
@@ -57,7 +65,7 @@ detector.detect(data);
 ## Contributing
 
 All contributions are welcome. If you would like to lend and hand, feel free to
-fork this repository and open pull requests to your heart's content.
+fork this repository and open pull requests.
 
 ## License
 
