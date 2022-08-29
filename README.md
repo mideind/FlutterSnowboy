@@ -16,9 +16,10 @@ The plugin currently only supports the Android and iOS platforms.
 
 ## Models
 
-The Flutter Snowboy package requires a working Snowboy detection model. To train
-your own model, clone [this repo](https://github.com/seasalt-ai/snowboy) and
-follow the instructions.
+The Flutter Snowboy package requires a working Snowboy detection
+model (pmdl) to be useful. To train your own model, clone
+[this repo](https://github.com/seasalt-ai/snowboy) and follow
+the instructions.
 
 ## How to use
 
