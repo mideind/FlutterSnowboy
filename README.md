@@ -2,6 +2,8 @@
 [![Language](https://img.shields.io/badge/language-dart-lightblue)]()
 [![Language](https://img.shields.io/badge/language-objective--c-lightgrey)]()
 [![Language](https://img.shields.io/badge/language-java-lightgreen)]()
+![Release](https://shields.io/github/v/release/mideind/flutter_snowboy?display_name=tag)
+![pub.dev](https://img.shields.io/pub/v/flutter_snowboy)
 [![Build](https://github.com/mideind/flutter_snowboy/actions/workflows/main.yml/badge.svg)]()
 
 # Flutter Snowboy plugin
