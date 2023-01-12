@@ -21,8 +21,8 @@
 // Snowboy configuration defaults
 #define SNOWBOY_DEFAULT_SENSITIVITY 0.5
 #define SNOWBOY_DEFAULT_AUDIO_GAIN 1.0
-#define SNOWBOY_DEFAULT_APPLY_FRONTEND                                         \
-  FALSE // Should be false for pmdl, true for umdl
+// Should be false for pmdl, true for umdl
+#define SNOWBOY_DEFAULT_APPLY_FRONTEND FALSE
 
 @interface FlutterSnowboyPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
