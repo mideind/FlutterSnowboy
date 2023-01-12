@@ -1,6 +1,5 @@
 name: flutter_snowboy
-description: Flutter wrapper plugin for Snowboy hotword detection. Snowboy is a cross-platform
-DNN-based hotword detection toolkit developed by KITT.AI.
+description: Flutter wrapper plugin for Snowboy hotword detection. Snowboy is a cross-platform DNN-based hotword detection toolkit developed by KITT.AI.
 version: 0.1.1+1
 homepage: https://github.com/mideind/flutter_snowboy
 
