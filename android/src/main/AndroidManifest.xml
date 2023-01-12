@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="is.mideind.flutter_snowboy">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="is.mideind.flutter_snowboy">
   <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
   <uses-permission android:name="android.permission.INTERNET"></uses-permission>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>

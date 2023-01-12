@@ -1,5 +1,5 @@
 #
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
+# To learn more about a Podspec see https://guides.cocoapods.org/syntax/podspec.html.
 # Run `pod lib lint flutter_snowboy.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.version                 = '0.0.1'
   s.summary                 = 'Flutter Snowboy plugin.'
   s.description             = 'Flutter plugin for Snowboy DNN-based hotword detection.'
-  s.homepage                = 'http://github.com/mideind/flutter_snowboy'
+  s.homepage                = 'https://github.com/mideind/flutter_snowboy'
   s.author                  = { "Sveinbjorn Thordarson" => "sveinbjorn@sveinbjorn.org" }
   s.license                 = { :type => 'Apache 2', :file => '../LICENSE.txt' }
   s.source                  = { :path => '.' }
