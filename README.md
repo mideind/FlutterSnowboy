@@ -30,7 +30,7 @@ the instructions.
 Add this to the dependencies list in your `pubspec.yaml` file:
 
 ```yaml
-  flutter_snowboy: ">=0.1.0"
+  flutter_snowboy: ">=0.1.1"
 ```
 
 ### Initialize detector
@@ -59,6 +59,7 @@ void hwHandler() {
 detector.hotwordHandler = hwHandler;
 
 // ... get audio data as UInt8List and feed into detection function.
+// Audio data should be 16 kHz, 16-bit mono PCM
 
 detector.detect(data);
 
