@@ -70,6 +70,11 @@ detector.detect(data);
 All contributions are welcome. If you would like to lend and hand, feel free to
 fork this repository and open pull requests.
 
+## Version History
+
+* 0.1.1 - Null safety + minor fixes. Now requires Dart 2.12+ (12-01-2022)
+* 0.1.0 - Initial release (24-08-2022)
+
 ## License
 
 flutter_snowboy is Copyright (C) 2021-2023 [Miðeind ehf.](https://mideind.is)  
