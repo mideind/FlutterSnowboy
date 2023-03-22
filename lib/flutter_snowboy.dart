@@ -21,6 +21,9 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
+const kDefaultSensitivity = 0.5;
+const kDefaultAudioGain = 1.0;
+
 class Snowboy {
   MethodChannel _channel = const MethodChannel('plugin_snowboy');
   Function? hotwordHandler;
@@ -43,17 +46,19 @@ class Snowboy {
     }
   }
 
-  static void _err(String methodName, String msg) {
+  void _err(String methodName, String msg) {
     print("Error invoking Snowboy '$methodName' method: $msg");
   }
 
-  // Instantiate Snowboy in the native plugin code, load provided
-  // model and other resources, w. configuration.
+  /// Instantiate Snowboy in the native plugin code, load provided
+  /// model and other resources, w. configuration.
   Future<bool> prepare(String modelPath,
-      {double sensitivity = 0.5, double audioGain = 1.0, bool applyFrontend = false}) async {
+      {double sensitivity = kDefaultSensitivity,
+      double audioGain = kDefaultAudioGain,
+      bool applyFrontend = false}) async {
     try {
-      final bool success = await _channel
-          .invokeMethod('prepareSnowboy', [modelPath, sensitivity, audioGain, applyFrontend]);
+      final bool success = await _channel.invokeMethod(
+          'prepareSnowboy', [modelPath, sensitivity, audioGain, applyFrontend]);
       return success;
     } on PlatformException catch (e) {
       _err("prepareSnowboy", e.toString());
@@ -61,6 +66,7 @@ class Snowboy {
     }
   }
 
+  /// Detect hotword in the provided audio data
   Future<void> detect(Uint8List data) async {
     try {
       await _channel.invokeMethod('detectSnowboy', [data]);
@@ -69,7 +75,7 @@ class Snowboy {
     }
   }
 
-  // Dispose of all resources
+  /// Dispose of all resources
   Future<void> purge() async {
     try {
       await _channel.invokeMethod('purgeSnowboy');
