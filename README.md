@@ -8,7 +8,7 @@
 
 # Flutter Snowboy plugin
 
-*This is alpha quality software. Caveat emptor!*
+*This is beta quality software. Caveat emptor!*
 
 This repository contains the source code to the Flutter Snowboy package.
 [Snowboy](https://github.com/seasalt-ai/snowboy) is a cross-platform
