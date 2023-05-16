@@ -4,12 +4,12 @@
 #
 Pod::Spec.new do |s|
   s.name                    = 'flutter_snowboy'
-  s.version                 = '0.0.1'
+  s.version                 = '0.1.2'
   s.summary                 = 'Flutter Snowboy plugin.'
   s.description             = 'Flutter plugin for Snowboy DNN-based hotword detection.'
   s.homepage                = 'https://github.com/mideind/flutter_snowboy'
   s.author                  = { "Sveinbjorn Thordarson" => "sveinbjorn@sveinbjorn.org" }
-  s.license                 = { :type => 'Apache 2', :file => '../LICENSE.txt' }
+  s.license                 = { :type => 'Apache 2', :file => '../LICENSE' }
   s.source                  = { :path => '.' }
   s.source_files            = ['Classes/**/*.h', 'Classes/**/*.m', 'Classes/**/*.mm']
   s.public_header_files     = ['Classes/**/*.h']

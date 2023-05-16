@@ -44,11 +44,11 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
   String status = "Snowboy is not running";
   String buttonTitle = 'Start detection';
 
-  Snowboy detector;
+  late Snowboy detector;
 
   FlutterSoundRecorder _micRecorder = FlutterSoundRecorder();
-  StreamController _recordingDataController;
-  StreamSubscription _recordingDataSubscription;
+  StreamController? _recordingDataController;
+  StreamSubscription? _recordingDataSubscription;
 
   @override
   void initState() {
@@ -100,10 +100,10 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
 
     // Create recording stream
     _recordingDataController = StreamController<Food>();
-    _recordingDataSubscription = _recordingDataController.stream.listen((buffer) {
+    _recordingDataSubscription = _recordingDataController?.stream.listen((buffer) {
       // When we get data, feed it into Snowboy detector
       if (buffer is FoodData) {
-        Uint8List copy = new Uint8List.fromList(buffer.data);
+        Uint8List copy = new Uint8List.fromList(buffer.data!);
         // print("Got audio data (${buffer.data.lengthInBytes} bytes");
         detector.detect(copy);
       }
@@ -111,15 +111,15 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
 
     // Start recording
     await _micRecorder.startRecorder(
-        toStream: _recordingDataController.sink,
+        toStream: _recordingDataController!.sink as StreamSink<Food>,
         codec: Codec.pcm16,
         numChannels: 1,
         sampleRate: 16000);
   }
 
   void stopDetection() async {
-    await _micRecorder?.stopRecorder();
-    await _micRecorder?.closeAudioSession();
+    await _micRecorder.stopRecorder();
+    await _micRecorder.closeAudioSession();
     await _recordingDataSubscription?.cancel();
     await _recordingDataController?.close();
   }
