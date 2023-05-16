@@ -23,6 +23,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Looper;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -30,7 +31,6 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 import is.mideind.flutter_snowboy.Detector;
 import java.io.File;
 import java.util.*;
@@ -46,7 +46,7 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
   private Detector detector;
 
   // Handler invoked when hotword is detected
-  public Handler handle = new Handler() {
+  public Handler handle = new Handler(Looper.getMainLooper()) {
     @Override
     public void handleMessage(Message msg) {
       // System.err.println("Handler invoked!");
