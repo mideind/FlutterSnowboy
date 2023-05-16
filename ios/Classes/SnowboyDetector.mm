@@ -28,6 +28,7 @@
 
 @implementation SnowboyDetector
 
+// Singleton instance
 + (instancetype)sharedInstance {
   static SnowboyDetector *instance = nil;
   if (!instance) {
@@ -36,6 +37,8 @@
   return instance;
 }
 
+// Initialize the Snowboy detector with the given model
+// file and other configuration parameters.
 - (BOOL)prepare:(NSString *)modelPath
       sensitivity:(double)sensitivity
         audioGain:(double)audioGain
@@ -68,6 +71,7 @@
   return TRUE;
 }
 
+// Run the Snowboy detector on the given audio data
 - (void)detect:(NSData *)audioData channel:(FlutterMethodChannel *)channel {
   const int16_t *bytes = (int16_t *)[audioData bytes];
   const int len = (int)[audioData length] / 2; // 16-bit audio
@@ -79,6 +83,15 @@
   });
 }
 
+// Release the Snowboy detector
+- (void)purge {
+  if (_snowboyDetect != NULL) {
+    delete _snowboyDetect;
+    _snowboyDetect = NULL;
+  }
+}
+
+// Returns true if the Snowboy detector has been initialized
 - (BOOL)inited {
   return (_snowboyDetect != NULL);
 }
