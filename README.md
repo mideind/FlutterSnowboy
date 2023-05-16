@@ -8,8 +8,6 @@
 
 # Flutter Snowboy plugin
 
-*This is beta quality software. Caveat emptor!*
-
 This repository contains the source code to the Flutter Snowboy package.
 [Snowboy](https://github.com/seasalt-ai/snowboy) is a cross-platform
 DNN-based hotword detection toolkit.
@@ -19,7 +17,7 @@ The plugin currently only supports the Android and iOS platforms.
 ## Models
 
 The Flutter Snowboy package requires a working Snowboy detection
-model (pmdl) to be useful. To train your own model, clone
+model (`pmdl`) to be useful. To train your own model, clone
 [this repo](https://github.com/seasalt-ai/snowboy) and follow
 the instructions.
 
@@ -30,7 +28,7 @@ the instructions.
 Add this to the dependencies list in your `pubspec.yaml` file:
 
 ```yaml
-  flutter_snowboy: ">=0.1.1"
+  flutter_snowboy: ">=0.1.2"
 ```
 
 ### Initialize detector

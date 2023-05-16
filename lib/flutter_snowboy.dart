@@ -50,15 +50,15 @@ class Snowboy {
     print("Error invoking Snowboy '$methodName' method: $msg");
   }
 
-  /// Instantiate Snowboy in the native plugin code, load provided
-  /// model and other resources, w. configuration.
+  /// Instantiate Snowboy in the native plugin code, load
+  /// provided model and other resources, w. configuration.
   Future<bool> prepare(String modelPath,
       {double sensitivity = kDefaultSensitivity,
       double audioGain = kDefaultAudioGain,
       bool applyFrontend = false}) async {
     try {
-      final bool success = await _channel.invokeMethod(
-          'prepareSnowboy', [modelPath, sensitivity, audioGain, applyFrontend]);
+      final bool success = await _channel
+          .invokeMethod('prepareSnowboy', [modelPath, sensitivity, audioGain, applyFrontend]);
       return success;
     } on PlatformException catch (e) {
       _err("prepareSnowboy", e.toString());
