@@ -20,11 +20,9 @@ package is.mideind.flutter_snowboy;
 import ai.kitt.snowboy.AppResCopy;
 import ai.kitt.snowboy.Constants;
 import android.content.Context;
-import android.media.AudioManager;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Looper;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
@@ -54,13 +52,16 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
       channel.invokeMethod("hotword", null, new Result() {
         // Boilerplate
         @Override
-        public void success(Object o) {}
+        public void success(Object o) {
+        }
 
         @Override
-        public void error(String s, String s1, Object o) {}
+        public void error(String s, String s1, Object o) {
+        }
 
         @Override
-        public void notImplemented() {}
+        public void notImplemented() {
+        }
       });
     }
   };
@@ -68,16 +69,16 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
   public void prepareSnowboy(@NonNull MethodCall call, @NonNull Result result) {
     // Copy assets required by Snowboy to filesystem
     String rsrcPath = context.getFilesDir().getAbsolutePath() + "/" +
-                      Constants.ASSETS_DIRNAME;
+        Constants.ASSETS_DIRNAME;
     String commonPath = rsrcPath + "/" + Constants.COMMON_RES_FILENAME;
 
     try {
       AppResCopy.copyFilesFromAssets(context, Constants.ASSETS_DIRNAME,
-                                     rsrcPath, true);
+          rsrcPath, true);
 
       ArrayList args = call.arguments();
 
-      String modelPath = (String)args.get(0);
+      String modelPath = (String) args.get(0);
 
       // Basic sanity check
       if (modelPath == null || modelPath.trim().isEmpty()) {
@@ -97,11 +98,11 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
       System.out.println("Final model path: '" + modelPath + "'");
 
       String sensitivity = args.get(1) + "";
-      double audioGain = (double)args.get(2);
-      boolean applyFrontend = (boolean)args.get(3);
+      double audioGain = (double) args.get(2);
+      boolean applyFrontend = (boolean) args.get(3);
 
       detector = new Detector(handle, commonPath, modelPath, sensitivity,
-                              audioGain, applyFrontend);
+          audioGain, applyFrontend);
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -115,7 +116,7 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
     try {
       // Retrieve first argument from Flutter. This should be audio data.
       ArrayList args = call.arguments();
-      byte[] bytes = (byte[])args.get(0);
+      byte[] bytes = (byte[]) args.get(0);
       // Feed bytes into detector
       detector.detect(bytes);
     } catch (Exception e) {
@@ -132,11 +133,10 @@ public class FlutterSnowboyPlugin implements FlutterPlugin, MethodCallHandler {
   }
 
   @Override
-  public void
-  onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     // Called when the Flutter plugin is attached to the Flutter Engine.
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(),
-                                "plugin_snowboy");
+        "plugin_snowboy");
     channel.setMethodCallHandler(this);
     context = flutterPluginBinding.getApplicationContext();
   }

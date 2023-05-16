@@ -15,6 +15,8 @@
  *
  */
 
+// This is an Objective-C++ wrapper around the Snowboy C++ detector.
+
 #import "SnowboyDetector.h"
 #import <Flutter/Flutter.h>
 #import <Snowboy/Snowboy.h>
@@ -39,13 +41,13 @@
         audioGain:(double)audioGain
     applyFrontend:(BOOL)applyFrontend {
 
-  NSLog(@"Initing Snowboy hotword detector");
   _snowboyDetect = NULL;
 
   NSString *commonPath = [[NSBundle mainBundle] pathForResource:@"common"
                                                          ofType:@"res"];
   if (![[NSFileManager defaultManager] fileExistsAtPath:commonPath]) {
-    NSLog(@"Unable to init Snowboy, bundled common.res missing");
+    NSLog(
+        @"Unable to init Snowboy, required bundled file 'common.res' missing");
     return FALSE;
   }
   if (![[NSFileManager defaultManager] fileExistsAtPath:modelPath]) {
@@ -72,7 +74,6 @@
   int result = _snowboyDetect->RunDetection((const int16_t *)bytes, len);
   dispatch_async(dispatch_get_main_queue(), ^{
     if (result == 1) {
-      // NSLog(@"Snowboy: Hotword detected");
       [channel invokeMethod:@"hotword" arguments:nil];
     }
   });
