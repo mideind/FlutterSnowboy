@@ -78,7 +78,8 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
     }
     ByteData bytes = await rootBundle.load("assets/$filename");
     final buffer = bytes.buffer;
-    File(finalPath).writeAsBytes(buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
+    await File(finalPath)
+        .writeAsBytes(buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
     return finalPath;
   }
 
