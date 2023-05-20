@@ -1,4 +1,6 @@
 /*
+ * flutter_snowboy - Flutter package wrapper for Snowboy hotword detection.
+ *
  * Copyright (C) 2021-2023 Miðeind ehf.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,12 +30,13 @@ class Snowboy {
   MethodChannel _channel = const MethodChannel('plugin_snowboy');
   Function? hotwordHandler;
 
+  /// Constructor
   Snowboy() {
-    // Register handler to receive messages from native plugin
+    // Register handler to receive messages from the native plugin.
     _channel.setMethodCallHandler(channelMethodCallHandler);
   }
 
-  // Handle messages from the native plugin
+  /// Handle messages from the native plugin.
   Future<dynamic> channelMethodCallHandler(MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'hotword':
@@ -66,7 +69,7 @@ class Snowboy {
     }
   }
 
-  /// Detect hotword in the provided audio data
+  /// Detect hotword in the provided audio data.
   Future<void> detect(Uint8List data) async {
     try {
       await _channel.invokeMethod('detectSnowboy', [data]);
@@ -75,7 +78,7 @@ class Snowboy {
     }
   }
 
-  /// Dispose of all resources
+  /// Dispose of all resources.
   Future<void> purge() async {
     try {
       await _channel.invokeMethod('purgeSnowboy');

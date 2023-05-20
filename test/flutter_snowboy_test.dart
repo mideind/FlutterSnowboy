@@ -1,4 +1,6 @@
 /*
+ * flutter_snowboy - Flutter package wrapper for Snowboy hotword detection.
+ *
  * Copyright (C) 2021-2023 Miðeind ehf.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

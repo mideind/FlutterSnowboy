@@ -1,4 +1,6 @@
 /*
+ * flutter_snowboy - Flutter package wrapper for Snowboy hotword detection.
+ *
  * Copyright 2021-2023 Miðeind ehf.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -181,6 +183,7 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
         ),
         body: Center(
           child: Column(children: <Widget>[
+            Text("\n"),
             MaterialButton(
               minWidth: double.infinity,
               child: Text(buttonTitle,
@@ -189,11 +192,13 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
                   )),
               onPressed: toggleHotwordDetection,
             ),
-            Text(status,
+            Text("\n" + status,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20.0,
                 )),
-            Text('Hotword heard $numDetected times',
+            Text('\nHotword heard $numDetected times',
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20.0,
                 )),
