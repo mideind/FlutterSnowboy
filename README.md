@@ -72,8 +72,9 @@ fork this repository and open pull requests.
 
 ## Version History
 
+* 0.1.2 - Various fixes (20-05-2023)
 * 0.1.1 - Null safety + minor fixes. Now requires Dart 2.12+ (12-01-2022)
-* 0.1.0 - Initial release (24-08-2022)
+* 0.1.0 - Initial release (24-08-2021)
 
 ## License
 
