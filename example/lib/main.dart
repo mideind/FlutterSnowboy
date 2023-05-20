@@ -25,9 +25,13 @@ import 'package:flutter/services.dart';
 
 import 'package:audiofileplayer/audiofileplayer.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter_sound_lite/flutter_sound.dart';
+import 'package:audio_session/audio_session.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 
 import 'package:flutter_snowboy/flutter_snowboy.dart';
+
+const kSampleRate = 16000;
+const kNumChannels = 1;
 
 void main() {
   runApp(SnowboyExampleApp());
@@ -58,20 +62,40 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      String modelPath = await copyModelToFilesystem("hi_embla.pmdl");
-      // Create detector object and prepare it
-      detector = Snowboy();
-      await detector.prepare(modelPath);
-      detector.hotwordHandler = hotwordHandler;
-    } on PlatformException {}
+    final String modelPath = await copyModelToFilesystem("hi_embla.pmdl");
+    // Create detector object and prepare it
+    detector = Snowboy();
+    await detector.prepare(modelPath);
+    detector.hotwordHandler = hotwordHandler;
+    await configureAudioSession();
+  }
+
+  Future<void> configureAudioSession() async {
+    final session = await AudioSession.instance;
+    await session.configure(AudioSessionConfiguration(
+      avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
+      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.defaultToSpeaker |
+          AVAudioSessionCategoryOptions.allowBluetooth,
+      //     AVAudioSessionCategoryOptions.duckOthers,
+      // avAudioSessionMode: AVAudioSessionMode.spokenAudio,
+      avAudioSessionMode: AVAudioSessionMode.defaultMode,
+      avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
+      avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
+      androidAudioAttributes: const AndroidAudioAttributes(
+        contentType: AndroidAudioContentType.speech,
+        flags: AndroidAudioFlags.none,
+        usage: AndroidAudioUsage.voiceCommunication,
+      ),
+      androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+      androidWillPauseWhenDucked: true,
+    ));
+    await session.setActive(true);
   }
 
   // Copy model from asset bundle to temp directory on the filesystem
   static Future<String> copyModelToFilesystem(String filename) async {
-    String dir = (await getTemporaryDirectory()).path;
-    String finalPath = "$dir/$filename";
+    final String dir = (await getTemporaryDirectory()).path;
+    final String finalPath = "$dir/$filename";
     if (await File(finalPath).exists() == true) {
       // Don't overwrite existing file
       return finalPath;
@@ -95,9 +119,9 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
       ..dispose();
   }
 
-  void startDetection() async {
+  Future<void> startDetection() async {
     // Prep recording session
-    await _micRecorder.openAudioSession();
+    await _micRecorder.openRecorder();
 
     // Create recording stream
     _recordingDataController = StreamController<Food>();
@@ -114,29 +138,29 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
     await _micRecorder.startRecorder(
         toStream: _recordingDataController!.sink as StreamSink<Food>,
         codec: Codec.pcm16,
-        numChannels: 1,
-        sampleRate: 16000);
+        numChannels: kNumChannels,
+        sampleRate: kSampleRate);
   }
 
-  void stopDetection() async {
+  Future<void> stopDetection() async {
     await _micRecorder.stopRecorder();
-    await _micRecorder.closeAudioSession();
+    await _micRecorder.closeRecorder();
     await _recordingDataSubscription?.cancel();
     await _recordingDataController?.close();
   }
 
-  void toggleHotwordDetection() {
+  void toggleHotwordDetection() async {
     String s;
     String t;
     bool r;
 
     if (running == false) {
-      startDetection();
+      await startDetection();
       s = "Snowboy is running\nSay 'Hi Embla' to trigger hotword handler.";
       t = "Stop detection";
       r = true;
     } else {
-      stopDetection();
+      await stopDetection();
       s = "Snowboy is not running";
       t = "Start detection";
       r = false;

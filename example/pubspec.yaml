@@ -1,10 +1,10 @@
 name: flutter_snowboy_example
 description: Demonstrates how to use the flutter_snowboy plugin.
-version: 0.0.1+1
+version: 0.1.2+1
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 
 environment:
   sdk: '>=2.12.0 <4.0.0'
@@ -13,9 +13,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  audiofileplayer: '>=2.1.0'
-  path_provider: '>=2.0.11'
-  flutter_sound_lite: '>=8.5.0'
+  audiofileplayer: '^2.1.1'
+  path_provider: '^2.0.15'
+  audio_session: '^0.1.14'
+  flutter_sound: '^9.2.13'
 
   flutter_snowboy:
     # When depending on this package from a real application you should use:
@@ -29,18 +30,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter.
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
-
-  # To add assets to your application, add an assets section, like this:
   assets:
     - assets/hi_embla.pmdl
     - assets/ding.wav
