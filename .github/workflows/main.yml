@@ -31,7 +31,9 @@ jobs:
         with:
           flutter-version: '3.10.0'
           channel: 'stable'
-      - run: flutter pub get
+      - run: flutter config --no-analytics
+      - run: flutter --disable-telemetry
+      - run: flutter pub get --suppress-analytics
       - run: dart analyze lib example/lib
       - run: flutter test
       - run: |
