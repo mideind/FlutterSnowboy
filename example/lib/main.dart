@@ -76,12 +76,14 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
     final session = await AudioSession.instance;
     await session.configure(AudioSessionConfiguration(
       avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
-      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.defaultToSpeaker |
-          AVAudioSessionCategoryOptions.allowBluetooth,
+      avAudioSessionCategoryOptions:
+          AVAudioSessionCategoryOptions.defaultToSpeaker |
+              AVAudioSessionCategoryOptions.allowBluetooth,
       //     AVAudioSessionCategoryOptions.duckOthers,
       // avAudioSessionMode: AVAudioSessionMode.spokenAudio,
       avAudioSessionMode: AVAudioSessionMode.defaultMode,
-      avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
+      avAudioSessionRouteSharingPolicy:
+          AVAudioSessionRouteSharingPolicy.defaultPolicy,
       avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
       androidAudioAttributes: const AndroidAudioAttributes(
         contentType: AndroidAudioContentType.speech,
@@ -104,8 +106,8 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
     }
     ByteData bytes = await rootBundle.load("assets/$filename");
     final buffer = bytes.buffer;
-    await File(finalPath)
-        .writeAsBytes(buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
+    await File(finalPath).writeAsBytes(
+        buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
     return finalPath;
   }
 
@@ -127,7 +129,8 @@ class _SnowboyExampleAppState extends State<SnowboyExampleApp> {
 
     // Create recording stream
     _recordingDataController = StreamController<Food>();
-    _recordingDataSubscription = _recordingDataController?.stream.listen((buffer) {
+    _recordingDataSubscription =
+        _recordingDataController?.stream.listen((buffer) {
       // When we get data, feed it into Snowboy detector
       if (buffer is FoodData) {
         Uint8List copy = new Uint8List.fromList(buffer.data!);
