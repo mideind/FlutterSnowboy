@@ -22,7 +22,7 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 dependencies {
-    compile fileTree(include: '*.jar', dir: 'libs')
+    implementation fileTree(include: '*.jar', dir: 'libs')
     implementation 'androidx.annotation:annotation:1.1.0'
 }
 
@@ -42,6 +42,10 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
+    }
+    buildFeatures {
+        renderScript true
+        aidl true
     }
 }
 
